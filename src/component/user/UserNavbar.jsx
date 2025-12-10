@@ -1,0 +1,269 @@
+// import React, { useState } from "react";
+// import { Link, useLocation } from "react-router-dom";
+// import { User, Layers, Menu, X, Crown } from "lucide-react";
+
+
+// const UserNavbar = () => {
+//   const location = useLocation();
+//   const [isMenuOpen, setIsMenuOpen] = useState(false);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+
+//   const navItems = [
+//     { path: "/user/profile", label: "Profile", active: true },
+//     { path: "/user/home", label: "Problems", active: false },
+//     { path: "/user/ai-tutor", label: "AI Tutor", active: false },
+//     { path: "/user/community", label: "Community", active: false },
+//     { path: "/user/jobdetails", label: "JobPost", active: false },
+//     { path: "/user/interview", label: "Interview", active: false },
+//   ];
+
+//   return (
+//     <>
+//       <div className="bg-slate-800/90 backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-50">
+//         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+//           <Link to="/user/home" className="flex items-center gap-2">
+//             <Layers className="w-7 h-7 text-cyan-400" />
+//             <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+//               CodeArc
+//             </span>
+//           </Link>
+
+//           <nav className="hidden md:flex items-center space-x-8">
+//             {navItems.map((item) => {
+//               const isActive = location.pathname === item.path;
+//               return (
+//                 <Link
+//                   key={item.path}
+//                   to={item.active ? item.path : "#"}
+//                   className={`transition-colors font-medium pb-1 border-b-2 ${
+//                     isActive
+//                       ? "text-white border-blue-500"
+//                       : item.active
+//                       ? "text-gray-300 hover:text-white border-transparent hover:border-blue-400/50"
+//                       : "text-gray-500 cursor-not-allowed border-transparent"
+//                   }`}
+//                   title={item.active ? "" : "Coming Soon"}
+//                 >
+//                   {item.label}
+//                   {!item.active && (
+//                     <span className="text-xs text-yellow-500 ml-1">🔒</span>
+//                   )}
+//                 </Link>
+//               );
+//             })}
+//           </nav>
+
+//           <div className="flex items-center space-x-4">
+//             <Link to="/user/profile">
+//               <User className="w-5 h-5 text-gray-300 hover:text-white cursor-pointer transition-colors" />
+//             </Link>
+
+
+//             {/* Desktop Premium Button - Improved Design */}
+//             <button
+//               onClick={() => setIsModalOpen(true)}
+//               className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-sm font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105"
+//             >
+//               <Crown className="w-4 h-4" />
+//               <span>Premium</span>
+//             </button>
+//             <button
+//               onClick={() => setIsMenuOpen(!isMenuOpen)}
+//               className="md:hidden text-gray-300 hover:text-white transition-colors"
+//             >
+//               {isMenuOpen ? (
+//                 <X className="w-6 h-6" />
+//               ) : (
+//                 <Menu className="w-6 h-6" />
+//               )}
+//             </button>
+//           </div>
+//         </div>
+
+//         {isMenuOpen && (
+//           <div className="md:hidden bg-slate-900/95 backdrop-blur-lg border-t border-slate-700/50">
+//             <nav className="flex flex-col items-start px-6 py-4 space-y-4">
+//               {navItems.map((item) => {
+//                 const isActive = location.pathname === item.path;
+//                 return (
+//                   <Link
+//                     key={item.path}
+//                     to={item.active ? item.path : "#"}
+//                     onClick={() => item.active && setIsMenuOpen(false)}
+//                     className={`w-full transition-colors font-medium pb-1 border-b-2 ${
+//                       isActive
+//                         ? "text-white border-blue-500"
+//                         : item.active
+//                         ? "text-gray-300 hover:text-white border-transparent hover:border-blue-400/50"
+//                         : "text-gray-500 cursor-not-allowed border-transparent"
+//                     }`}
+//                     title={item.active ? "" : "Coming Soon"}
+//                   >
+//                     <div className="flex items-center">
+//                       {item.label}
+//                       {!item.active && (
+//                         <span className="text-xs text-yellow-500 ml-2">🔒</span>
+//                       )}
+//                     </div>
+//                   </Link>
+//                 );
+//               })}
+//               {/* Mobile Premium Button - Improved Design */}
+//               <button
+//                 onClick={() => {
+//                   setIsModalOpen(true);
+//                   setIsMenuOpen(false);
+//                 }}
+//                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-sm font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/30"
+//               >
+//                 <Crown className="w-5 h-5" />
+//                 <span>Premium</span>
+//               </button>
+//             </nav>
+//           </div>
+//         )}
+//       </div>
+
+     
+//     </>
+//   );
+// };
+
+// export default UserNavbar;
+
+
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { User, Layers, Menu, X, Crown } from "lucide-react";
+
+const UserNavbar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const navItems = [
+    { path: "/user/profile", label: "Profile", active: true },
+    { path: "/user/home", label: "Problems", active: true },
+    { path: "/user/ai-tutor", label: "AI Tutor", active: false },
+    { path: "/user/community", label: "Community", active: false },
+    { path: "/user/jobdetails", label: "JobPost", active: false },
+    { path: "/user/interview", label: "Interview", active: false },
+  ];
+
+  return (
+    <>
+      <div className="bg-slate-800/90 backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link to="/user/home" className="flex items-center gap-2">
+            <Layers className="w-7 h-7 text-cyan-400" />
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              CodeArc
+            </span>
+          </Link>
+
+          <nav className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.active ? item.path : "#"}
+                  className={`transition-colors font-medium pb-1 border-b-2 ${
+                    isActive
+                      ? "text-white border-blue-500"
+                      : item.active
+                      ? "text-gray-300 hover:text-white border-transparent hover:border-blue-400/50"
+                      : "text-gray-500 cursor-not-allowed border-transparent"
+                  }`}
+                  title={item.active ? "" : "Coming Soon"}
+                >
+                  {item.label}
+                  {!item.active && (
+                    <span className="text-xs text-yellow-500 ml-1">🔒</span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="flex items-center space-x-4">
+            {/* ✅ Fixed Profile Icon - Now clickable */}
+            <button 
+              onClick={() => navigate("/user/profile")}
+              className="p-2 rounded-lg hover:bg-slate-700/50 transition-colors"
+              title="Go to Profile"
+            >
+              <User className="w-5 h-5 text-gray-300 hover:text-white cursor-pointer transition-colors" />
+            </button>
+
+            {/* Desktop Premium Button */}
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-sm font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105"
+            >
+              <Crown className="w-4 h-4" />
+              <span>Premium</span>
+            </button>
+            
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden text-gray-300 hover:text-white transition-colors"
+            >
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {isMenuOpen && (
+          <div className="md:hidden bg-slate-900/95 backdrop-blur-lg border-t border-slate-700/50">
+            <nav className="flex flex-col items-start px-6 py-4 space-y-4">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.active ? item.path : "#"}
+                    onClick={() => item.active && setIsMenuOpen(false)}
+                    className={`w-full transition-colors font-medium pb-1 border-b-2 ${
+                      isActive
+                        ? "text-white border-blue-500"
+                        : item.active
+                        ? "text-gray-300 hover:text-white border-transparent hover:border-blue-400/50"
+                        : "text-gray-500 cursor-not-allowed border-transparent"
+                    }`}
+                    title={item.active ? "" : "Coming Soon"}
+                  >
+                    <div className="flex items-center">
+                      {item.label}
+                      {!item.active && (
+                        <span className="text-xs text-yellow-500 ml-2">🔒</span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+              {/* Mobile Premium Button */}
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setIsMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-sm font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/30"
+              >
+                <Crown className="w-5 h-5" />
+                <span>Premium</span>
+              </button>
+            </nav>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default UserNavbar;
