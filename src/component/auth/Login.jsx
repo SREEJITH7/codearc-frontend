@@ -171,7 +171,7 @@ const GITHUB_URL = "http://localhost:8000/api/auth/github/login/ ";
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          {role} Login
+          {role} LOGIN
         </motion.h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">

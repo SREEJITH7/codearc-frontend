@@ -165,6 +165,7 @@
 
 
 // ==========================================================================
+import axios from "axios";
 import { axiosInstance } from "../config/axios.config";
 // import axiosInstance from "@/config/axiosInstance";   // or whatever path
 
@@ -346,6 +347,85 @@ forgotPasswordOtp: async (email) => {
     };
   }
 },
+
+
+ 
+getRecruiterProfile: async () => {
+  try {
+    const response = await axiosInstance.get(
+      "/api/recruiter/profile/"
+    );
+
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error("Error fetching recruiter profile:", error.response?.data);
+    return {
+      success: false,
+      message:
+        error.response?.data?.message ||
+        "Failed to fetch recruiter profile",
+    };
+  }
+},
+
+  // services/RecruiterAuth.js
+updateProfile: async (formData) => {
+  try {
+    const res = await axiosInstance.patch(
+      "/api/recruiter/profile/",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" }
+      }
+    );
+
+    return {
+      success: true,
+      data: res.data,
+      message: res.data.message || "Profile updated successfully"
+    };
+  } catch (err) {
+    // Let the error propagate – don't catch everything
+    console.error("Update profile error:", err);
+
+    // Optional: normalize error format
+    const errorMessage = err.response?.data?.message 
+      || err.response?.data?.error 
+      || err.message 
+      || "Failed to update profile";
+
+    throw new Error(errorMessage);
+  }
+},
+
+ logout: async () => {
+    console.log("=== REcruiter.logout CALLED ===")
+
+    try{
+      console.log("Making POST request to /api/auth/logout/")
+
+      const res = await axiosInstance.post("/api/auth/logout/");
+      console.log("Logout Success:", res.data);
+      
+      return{
+        success: true,
+        message: res.data.messsage || "Logout Successfully",
+      };
+    } catch (err) {
+      console.error("Loggout error:", err.response?.data || err);
+
+      return {
+        success : false,
+        message: 
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Logout failed",
+      };
+    }
+  },
 
   
 };

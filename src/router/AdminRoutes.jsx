@@ -36,6 +36,10 @@ import AdminLogin from "../pages/admin/auth/AdminLogin";
 
 // DASHBOARD
 import { AdminDashboardPage } from "../pages/admin/adminPages/DashBoardPage";
+import UsersListPage from "../pages/admin/adminpages/UsersListPage";
+import { RecruiterListPage } from "../pages/admin/adminpages/RecruiterListPage";
+
+
 
 const AdminRoutes = () => {
   return (
@@ -48,6 +52,9 @@ const AdminRoutes = () => {
       {/* PRIVATE ADMIN ROUTES */}
       <Route element={<AdminPrivateRoutes />}>
         <Route path="dashboard" element={<AdminDashboardPage />} /> {/* Changed from /admin/dashboard to dashboard */}
+        <Route path="users" element={<UsersListPage />} />
+        <Route path="recruiter" element={<RecruiterListPage />} />
+
       </Route>
     </Routes>
   );
