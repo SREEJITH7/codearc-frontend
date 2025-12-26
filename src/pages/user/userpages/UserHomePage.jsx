@@ -143,6 +143,7 @@ const UserHomePage = () => {
               <h3 className="text-lg font-semibold text-white mb-4">
                 Profile Completion
               </h3>
+
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-300 text-sm">Basic Info</span>
@@ -160,6 +161,7 @@ const UserHomePage = () => {
                   Complete Profile
                 </button>
               </div>
+              
             </div>
           </div>
         </div>

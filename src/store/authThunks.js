@@ -93,10 +93,23 @@ export const userResetPasswordThunk = createAsyncThunk(
  
 
 
-export const logoutThunk = createAsyncThunk("auth/logout", async (_, { dispatch }) => {
-  // optional: call backend logout endpoint then remove cookies
-  Cookies.remove("access_token");
-  Cookies.remove("refresh_token");
-  return {};
-});
+// export const logoutThunk = createAsyncThunk("auth/logout", async (_, { dispatch }) => {
+//   // optional: call backend logout endpoint then remove cookies
+//   Cookies.remove("access_token");
+//   Cookies.remove("refresh_token");
+//   return {};
+// });
+
+
+export const logoutThunk = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try{
+      await userAuthService.logout();
+      return {};
+    } catch (err) {
+      return rejectWithValue("logout failed")
+    }
+  }
+)
 

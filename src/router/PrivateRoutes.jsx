@@ -298,10 +298,17 @@ export const UserPrivateRoutes = () => {
 ---------------------------------------------- */
 export const RecruiterPrivateRoutes = () => {
   const recruiter = useAppSelector((s) => s.auth.user);
+  const token = Cookies.get("access_token");
 
-  if(!recruiter){
-    return <Navigate to="/recruiter/login"/>
+  if (!recruiter) {
+    return <Navigate to="/recruiter/login" replace />;
   }
+
+  if (recruiter.role !== "recruiter") {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
   return <Outlet />;
 };
+
 

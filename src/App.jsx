@@ -32,11 +32,24 @@ import UserRoutes from "./router/UserRoutes";
 import RecruiterRoutes from "./router/RecruiterRoutes";
 import AdminRoutes from "./router/AdminRoutes";
 
+import LoadingOverlay from "./component/common/LoadingOverlay";
+import { useAppSelector } from "./hooks";
+
+
 export default function App() {
+
+  const {loading, loadingMessage} = useAppSelector((state) => state.auth); 
+  
+
   return (
     <BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} />
-      
+
+      {loading && (
+  <LoadingOverlay message={loadingMessage ||  "Please wait..."} />
+)}
+
+
       <Routes>
         {/* All routes combined in one Routes component */}
         <Route path="/*" element={<UserRoutes />} />

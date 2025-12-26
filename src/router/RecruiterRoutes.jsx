@@ -40,17 +40,30 @@ import RecruiterLogin from "../pages/recruiter/auth/RecruiterLogin";
 import RecruiterOtp from "../pages/recruiter/auth/RecruiterOtp";
 import RecruiterForgotPassword from "../pages/recruiter/auth/RecruiterForgotPassword";
 import RecruiterResetPassword from "../pages/recruiter/auth/RecruiterResetPassword";
-
+import RecruiterPortal from "../pages/recruiter/recruiterPages/RecruiterPortalPage";
+import RecruiterProfilePage from "../pages/recruiter/recruiterPages/RecruiterProfilePage";
+import { RecruiterPrivateRoutes } from "./PrivateRoutes";
+import JobPostPage from "../pages/recruiter/recruiterPages/JobsPostPage";
 const RecruiterRoutes = () => {
   return (
-    <Routes>
+      <Routes>
+
+      {/* ================= PUBLIC ROUTES ================= */}
       <Route element={<RecruiterPublicRoutes />}>
-        <Route path="signup" element={<RecruiterSignup />} /> {/* Changed from /recruiter/signup */}
-        <Route path="login" element={<RecruiterLogin />} /> {/* Changed from /recruiter/login */}
-        <Route path="otp" element={<RecruiterOtp />} /> {/* Changed from /recruiter/otp */}
+        <Route path="signup" element={<RecruiterSignup />} />
+        <Route path="login" element={<RecruiterLogin />} />
+        <Route path="otp" element={<RecruiterOtp />} />
         <Route path="forgot-password" element={<RecruiterForgotPassword />} />
         <Route path="reset-password" element={<RecruiterResetPassword />} />
       </Route>
+
+      {/* ================= PRIVATE ROUTES ================= */}
+      <Route element={<RecruiterPrivateRoutes />}>
+        <Route path="portal" element={<RecruiterPortal />} />
+        <Route path="profile" element={<RecruiterProfilePage />} />
+        <Route path="/jobpost" element={<JobPostPage />} />
+      </Route>
+
     </Routes>
   );
 };

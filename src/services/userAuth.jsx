@@ -149,9 +149,7 @@
 //     }
 //   }
 // };
-
-
-// ============================================================================================
+//============================================================================================
 
 
 import { axiosInstance } from "../config/axios.config";
@@ -298,14 +296,14 @@ export const userAuthService = {
     const response = await axiosInstance.get('/api/auth/user/stats/');
     return response.data;
   },
-};
+
 
   updateProfile: async (userId, formData) => {
   try {
     console.log("=== userAuth.updateProfile CALLED ===");
 
-    const res = await axiosInstance.put(
-      `/api/auth/user/profile/update/${userId}/`,
+    const res = await axiosInstance.patch(
+      `/api/user/profile/update/${userId}/`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -317,4 +315,32 @@ export const userAuthService = {
     console.error("Update Profile Error:", err.response?.data || err);
     return { success: false, message: "Update failed" };
   }
-}
+},
+
+
+  logout: async () => {
+    console.log("=== userAuth.logout CALLED ===")
+
+    try{
+      console.log("Making POST request to /api/auth/logout/")
+
+      const res = await axiosInstance.post("/api/auth/logout/");
+      console.log("Logout Success:", res.data);
+      
+      return{
+        success: true,
+        message: res.data.messsage || "Logged out Successfull",
+      };
+    } catch (err) {
+      console.error("Loggout error:", err.response?.data || err);
+
+      return {
+        success : false,
+        message: 
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Logout failed",
+      };
+    }
+  },
+};

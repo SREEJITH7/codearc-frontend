@@ -17,7 +17,17 @@ export const UserPublicRoutes = () => {
 /*---------------------------------------------
    RECRUITER PUBLIC ROUTES  (no token check)
 ---------------------------------------------- */
+// export const RecruiterPublicRoutes = () => {
+//   return <Outlet />;
+// };
+
 export const RecruiterPublicRoutes = () => {
+  const user = useAppSelector((s) => s.auth.user);
+
+  // if (user && user.role === "recruiter") {
+  //   return <Navigate to="/recruiter/portal" replace />;
+  // }
+
   return <Outlet />;
 };
 

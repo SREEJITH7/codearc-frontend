@@ -1,10 +1,36 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bell, UserCircle } from "lucide-react";
 import UserLogout from "../user/UserLogout";
+import { toast } from "react-toastify";
+import { adminAuthService } from "../../services/adminAuth";
+import { useDispatch } from "react-redux";
+import { clearUser } from "../../store/authSlice";
+import { useNavigate } from "react-router-dom";
+
+
 
 export const AdminNavbar = () => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+    const handleLogout = async () => {
+      try{
+        const res = await adminAuthService.logout();
+  
+        if (res.success) {
+          dispatch(clearUser());
+          toast.success(res.message);
+          navigate("admin/login", { replace: true});
+        } else {
+          toast.error(res.message || "Logout failed");
+        }
+      } catch (err){
+        console.error("logout error:",err);
+        toast.error("something went wrong during logout");
+      }
+    };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -39,7 +65,14 @@ export const AdminNavbar = () => {
           <div className="absolute right-0 top-14 w-48 bg-slate-800 text-white rounded-xl shadow-lg border border-slate-700/50">
             <ul className="flex flex-col py-2">
               <li>
-                <UserLogout role="admin" />
+                {/* <UserLogout role="admin" /> */}
+                <button
+            // onClick={() => navigate("/user/login")}
+            onClick={handleLogout}
+            className="w-full bg-red-500/20 border border-red-500/30 text-red-400 py-3 rounded-xl"
+          >
+            Logout
+          </button>
               </li>
             </ul>
           </div>

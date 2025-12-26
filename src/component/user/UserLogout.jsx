@@ -5,27 +5,47 @@ import Cookies from "js-cookie";
 import {axiosInstance} from "../../config/axios.config"; 
 // import axiosInstance from "@/config/axiosInstance";   // or whatever path
 import { toast } from "react-toastify";
-
+import { adminAuthService } from "../../services/adminAuth";
+import { clearUser } from "../../store/authSlice";
+import { useDispatch } from "react-redux";
 
 
 const UserLogout = ({ role }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  // const handleLogout = async () => {
+  //   try {
+  //     // API request based on role
+  //     // const res = await axiosInstance.post(`/api/${role}/logout`);
+       
+  //     // Remove token
+  //     Cookies.remove("access_token");
+
+  //     toast.success(res?.data?.message || "Logged out successfully");
+
+  //     // Redirect
+  //     navigate(`/${role}/login`);
+  //   } catch (error) {
+  //     console.error("Logout error:", error);
+  //     toast.error("Logout failed. Try again.");
+  //   }
+  // };
+  
   const handleLogout = async () => {
-    try {
-      // API request based on role
-      const res = await axiosInstance.post(`/api/${role}/logout`);
+    try{
+      const res = await adminAuthService.logout();
 
-      // Remove token
-      Cookies.remove("access_token");
-
-      toast.success(res?.data?.message || "Logged out successfully");
-
-      // Redirect
-      navigate(`/${role}/login`);
-    } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("Logout failed. Try again.");
+      if (res.success) {
+        dispatch(clearUser());
+        toast.success(res.message);
+        navigate("admin/login", { replace: true});
+      } else {
+        toast.error(res.message || "Logout failed");
+      }
+    } catch (err){
+      console.error("logout error:",err);
+      toast.error("something went wrong during logout");
     }
   };
 
