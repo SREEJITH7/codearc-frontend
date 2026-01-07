@@ -39,7 +39,10 @@ import { AdminDashboardPage } from "../pages/admin/adminPages/DashBoardPage";
 import UsersListPage from "../pages/admin/adminpages/UsersListPage";
 import { RecruiterListPage } from "../pages/admin/adminpages/RecruiterListPage";
 
-
+import { ProblemsListPage } from "../pages/admin/adminpages/ProblemsListPage";
+import ProblemAddingPage from "../pages/admin/adminpages/ProblemAddingPage";
+import { CategoriesListPage } from "../pages/admin/adminpages/CategoriesListPage";
+import CategoryAddingPage from "../pages/admin/adminpages/CategoryAddingPage";
 
 const AdminRoutes = () => {
   return (
@@ -54,7 +57,11 @@ const AdminRoutes = () => {
         <Route path="dashboard" element={<AdminDashboardPage />} /> {/* Changed from /admin/dashboard to dashboard */}
         <Route path="users" element={<UsersListPage />} />
         <Route path="recruiter" element={<RecruiterListPage />} />
-
+        <Route path="problems" element={<ProblemsListPage />} />
+        <Route path="addproblems" element={<ProblemAddingPage/>} />
+        <Route path="problemcategory" element={<CategoriesListPage/>}/>
+        <Route path="addproblemcategory" element={<CategoryAddingPage/>} />
+        <Route path="problemcategory/edit/:id" element={<CategoryAddingPage />} />
       </Route>
     </Routes>
   );

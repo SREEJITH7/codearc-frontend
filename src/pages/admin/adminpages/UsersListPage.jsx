@@ -14,10 +14,6 @@ import { DropdownFilter } from "../../../component/common/DropDownFilter";
 
 
 
-
-
-
-
 const UsersListPage = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,10 +46,10 @@ const UsersListPage = () => {
         status: statusFilter || undefined,
       });
 
-      if (res.success && res.data) {
-        setUsers(res.data.users || []);
-        setTotalPages(res.data.pagination?.pages || 1);
-      } else {
+      if (res.success && res.data?.data) {
+  setUsers(res.data.data.users || []);
+  setTotalPages(res.data.data.pagination?.pages || 1);
+  } else {
         setUsers([]);
         setTotalPages(1);
       }

@@ -12,6 +12,7 @@ import UserForgotPassword from "../pages/user/auth/UserForgotPassword";
 import { UserResetPassword } from "../pages/user/auth/UserResetPassword";
 // import GoogleCallback from "../pages/user/auth/GoogleCallback";
 import UserProfilePage from "../pages/user/userpages/UserProfilePage";
+import SingleProblemPage from "../pages/user/userpages/SingleProblemPage";
 
 
 export default function UserRoutes() {
@@ -34,6 +35,7 @@ export default function UserRoutes() {
       <Route element={<UserPrivateRoutes />}>
         <Route path="user/home" element={<UserHomePage />} />
         <Route path="user/profile" element={<UserProfilePage />} />
+        <Route path="user/singleproblem/:problemId" element={<SingleProblemPage />} />
       </Route>
     </Routes>
   );
