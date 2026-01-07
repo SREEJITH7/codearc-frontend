@@ -44,10 +44,11 @@ export const RecruiterListPage = ({ user }) => {
         company: companyFilter || undefined,
       });
 
-      if (res.success && res.data) {
-        setUsers(res.data.recruiters || []);
-        setTotalPages(res.data.pagination.pages || 1);
-      } else {
+      if (res.success && res.data?.data) {
+  setUsers(res.data.data.recruiters || []);
+  setTotalPages(res.data.data.pagination?.pages || 1);
+}
+ else {
         setUsers([]);
         setTotalPages(1);
       }
