@@ -1,183 +1,14 @@
-
-
-// // src/services/adminAuth.jsx
-
-// import { axiosInstance } from "../config/axios.config";
-// import axiosInstance from "@/config/axiosInstance";   // or whatever path
-// import { ADMIN_API } from "../utils/apiRoutes";
-
-// // -------------------------------
-// // ADMIN LOGIN
-// // -------------------------------
-// const login = async (formData) => {
-//   try {
-//     const response = await axiosInstance.post("/api/auth/admin/login", formData);
-
-//     // // ✅ Save tokens to cookies after login
-//     // if (response.data.success && response.data.access_token) {
-//     //   Cookies.set("access", response.data.access_token, { 
-//     //     path: "/",
-//     //     expires: 1/96 // 15 minutes (1/96 of a day)
-//     //   });
-      
-//     //   Cookies.set("refresh", response.data.refresh_token, { 
-//     //     path: "/",
-//     //     expires: 7 // 7 days
-//     //   });
-//     // }
-
-//     return response.data;
-//   } catch (error) {
-//     const message = error?.response?.data?.message || "Something went wrong. Please try again.";
-//     return { success: false, message };
-//   }
-// };
-
-// // -------------------------------
-// // GET ALL USERS (STUDENTS)
-// // -------------------------------
-// const getAllUsers = async ({ page, limit, search, status } = {}) => {
-//   try {
-//     const response = await axiosInstance.get(`${ADMIN_API}/userslist`, {
-//       params: { page, limit, search, status },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     const message = error?.response?.data?.message || "Failed to fetch users";
-//     return { success: false, message };
-//   }
-// };
-
-// // -------------------------------
-// // GET ALL RECRUITERS
-// // -------------------------------
-// export const getAllRecruiters = async ({ page, limit, search, status } = {}) => {
-//   try {
-//     const res = await axiosInstance.get(`${ADMIN_API}/recruiterslist`, {
-//       params: { page, limit, search, status },
-//     });
-//     return res.data;
-//   } catch (error) {
-//     return {
-//       success: false,
-//       message: "Failed to fetch recruiters",
-//     };
-//   }
-// };
-
-
-// // -------------------------------
-// // TOGGLE STUDENT ACTIVE / INACTIVE
-// // -------------------------------
-// // const toggleUserStatus = async (userId) => {
-// //   try {
-// //     const response = await axiosInstance.patch(`${ADMIN_API}/users/${userId}`);
-// //     return response.data;
-// //   } catch (error) {
-// //     const message = error?.response?.data?.message || "Failed to update status";
-// //     return { success: false, message };
-// //   }
-// // };
-
-// const toggleUserStatus = async (userId) => {
-//   try {
-//     const response = await axiosInstance.post(
-//       `${ADMIN_API}/users/${userId}/toggle-status`
-//     );
-//     return response.data;
-//   } catch (error) {
-//     return {
-//       success: false,
-//       message: error?.response?.data?.message || "Failed to update status",
-//     };
-//   }
-// };
-
-
-// // -------------------------------
-// // TOGGLE RECRUITER ACTIVE / INACTIVE
-// // -------------------------------
-// export const toggleRecruiterStatus = async (id) => {
-//   try {
-//     const res = await axiosInstance.post(
-//       `${ADMIN_API}/recruiters/${id}/toggle-status`
-//     );
-//     return res.data;
-//   } catch (error) {
-//     return {
-//       success: false,
-//       message: "Failed to update recruiter status",
-//     };
-//   }
-// };
-
-// // -------------------------------
-// // APPROVE APPLICANT
-// // -------------------------------
-// const acceptApplicant = async (applicantId) => {
-//   try {
-//     const response = await axiosInstance.patch(
-//       `${ADMIN_API}/approve-applicant/${applicantId}`
-//     );
-//     return response.data;
-//   } catch (error) {
-//     const message = error?.response?.data?.message || "Failed to accept applicant";
-//     return { success: false, message };
-//   }
-// };
-
-// // -------------------------------
-// // REJECT APPLICANT
-// // -------------------------------
-// const rejectApplicant = async (applicantId, rejectReason) => {
-//   try {
-//     const response = await axiosInstance.patch(
-//       `${ADMIN_API}/reject-applicant/${applicantId}`,
-//       { rejectReason }
-//     );
-//     return response.data;
-//   } catch (error) {
-//     const message = error?.response?.data?.message || "Failed to reject applicant";
-//     return { success: false, message };
-//   }
-// };
-
-// // -------------------------------
-// // GET ALL APPLICANTS
-// // -------------------------------
-// const getAllApplicants = async ({ page, limit } = {}) => {
-//   try {
-//     const response = await axiosInstance.get(`${ADMIN_API}/applicantlist`, {
-//       params: { page, limit },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     const message = error?.response?.data?.message || "Failed to fetch applicants";
-//     return { success: false, message };
-//   }
-// };
-
-// // EXPORT SERVICE
-// export const adminAuthService = {
-//   login,
-//   getAllUsers,
-//   toggleUserStatus,
-//   getAllRecruiters,
-//   toggleRecruiterStatus,
-//   acceptApplicant,
-//   rejectApplicant,
-//   getAllApplicants,
-// };
-
+// src/services/adminAuth.jsx
 
 import { axiosInstance } from "../config/axios.config";
 import { ADMIN_API } from "../utils/apiRoutes";
 
 export const adminAuthService = {
 
-  // -------------------------------
+ 
   // ADMIN LOGIN
-  // -------------------------------
+  
+
 login: async (formData) => {
   try {
     const response = await axiosInstance.post(
@@ -187,7 +18,7 @@ login: async (formData) => {
 
     return {
       success: true,
-      user: response.data.user,   // 🔥 REQUIRED
+      user: response.data.user,   
       message: response.data.message || "Login successful",
     };
   } catch (error) {
@@ -389,3 +220,14 @@ logout : async () => {
   }
 }
 };
+
+
+
+//   login,
+//   getAllUsers,
+//   toggleUserStatus,
+//   getAllRecruiters,
+//   toggleRecruiterStatus,
+//   acceptApplicant,
+//   rejectApplicant,
+//   getAllApplicants,
