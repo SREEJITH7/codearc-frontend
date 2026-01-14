@@ -93,12 +93,8 @@ const ProblemList = ({
     // Status filter
     if (selectedStatuses?.length > 0) {
       filtered = filtered.filter((p) => {
-        if (p.status) {
-          return selectedStatuses.some(
-            (s) => s.toLowerCase() === p.status.toLowerCase()
-          );
-        }
-        return selectedStatuses.includes("Unsolved");
+        const solvedStatus = p.is_solved ? "Solved" : "Unsolved";
+        return selectedStatuses.some(s => s.toLowerCase() === solvedStatus.toLowerCase());
       });
     }
 
@@ -172,15 +168,11 @@ const ProblemList = ({
     }
   };
 
-  const getStatusIcon = (status) => {
-    switch (status?.toLowerCase()) {
-      case "solved":
-        return <CheckCircle2 className="w-5 h-5 text-green-400" />;
-      case "attempted":
-        return <AlertCircle className="w-5 h-5 text-yellow-400" />;
-      default:
-        return <Circle className="w-5 h-5 text-gray-400" />;
+  const getStatusIcon = (isSolved) => {
+    if (isSolved) {
+      return <CheckCircle2 className="w-5 h-5 text-green-400" />;
     }
+    return <Circle className="w-5 h-5 text-gray-400/50" />;
   };
 
   // Pagination
@@ -197,7 +189,7 @@ const ProblemList = ({
       key: "status",
       label: "Status",
       render: (problem) => (
-        <div className="flex justify-center">{getStatusIcon(problem.status)}</div>
+        <div className="flex justify-center">{getStatusIcon(problem.is_solved)}</div>
       ),
     },
     {
@@ -215,7 +207,7 @@ const ProblemList = ({
       render: (problem) => (
         <div className="flex items-center gap-2">
           <button
-            onClick={() => handleProblemClick(problem._id, problem.isPremium)}
+            onClick={() => handleProblemClick(problem.id, problem.isPremium)}
             className="text-cyan-400 hover:text-cyan-300 font-semibold text-sm transition duration-200 hover:underline"
           >
             {problem.title}
@@ -264,7 +256,7 @@ const ProblemList = ({
       label: "Action",
       render: (problem) => (
         <button
-          onClick={() => handleProblemClick(problem._id, problem.isPremium)}
+          onClick={() => handleProblemClick(problem.id, problem.isPremium)}
           className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200 flex items-center gap-2"
         >
           <Play size={16} />

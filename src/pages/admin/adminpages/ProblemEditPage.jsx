@@ -1,60 +1,78 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";  
 
 import ProblemAddingComponent from "../../../component/admin/ProblemAddingComponent";
 import { AdminLayout } from "../../../layouts/AdminLayouts";
 import { problemService } from "../../../services/problem/problemService";
 import { toast } from "react-toastify";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { validateProblem } from "../../../utils/validations/ProblemAddingValidation";
 import { cleanProblemData } from "../../../utils/validations/cleanProblemData";
 import { transformProblemForEdit } from "../../../utils/validations/transformProblemData";
 
-const ProblemAddingPage = () => {
+const ProblemEditPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const editProblem = location.state?.problem;
-
+  const { problemId } = useParams();
+  
   const [formErrors, setFormErrors] = useState([]);
-
-  const [problemData, setProblemData] = useState(() => {
-    if (editProblem) {
-      // Transform backend data (snake_case) to frontend format (camelCase)
-      const transformed = transformProblemForEdit(editProblem);
-      console.log("Edit mode - Transformed problem data:", transformed);
-      return transformed;
-    }
-
-    // Default new problem structure
-    return {
-      problemId: "",
-      title: "",
-      description: "",
-      difficulty: "Easy",
-      tags: [],
-      constraints: [],
-      examples: [{ input: "", output: "", explanation: "" }],
-      testCases: [{ input: [""], output: "" }],
-      functionName: "",
-      parameters: [{ name: "", type: "" }],
-      returnType: "",
-      category: { _id: "", name: "" },
-      solution: "",
-      timeLimit: 2,
-      memoryLimit: 256,
-      starterCode: {
-        javascript: "",
-        python: "",
-        java: "",
-        cpp: "",
-      },
-      hints: [],
-      isPremium: false,
-      visible: true,
-    };
+  const [loading, setLoading] = useState(true);
+  const [problemData, setProblemData] = useState({
+    problemId: "",
+    title: "",
+    description: "",
+    difficulty: "Easy",
+    tags: [],
+    constraints: [],
+    examples: [{ input: "", output: "", explanation: "" }],
+    testCases: [{ input: [""], output: "" }],
+    functionName: "",
+    parameters: [{ name: "", type: "" }],
+    returnType: "",
+    category: { _id: "", name: "" },
+    solution: "",
+    timeLimit: 2,
+    memoryLimit: 256,
+    starterCode: {
+      javascript: "",
+      python: "",
+      java: "",
+      cpp: "",
+    },
+    hints: [],
+    isPremium: false,
+    visible: true,
   });
+
+  // Fetch problem data when component mounts
+  useEffect(() => {
+    const fetchProblemData = async () => {
+      try {
+        setLoading(true);
+        const response = await problemService.getSingleProblem(problemId);
+        
+        if (response) {
+          const transformed = transformProblemForEdit(response);
+          console.log("Fetched problem data for edit:", transformed);
+          setProblemData(transformed);
+        } else {
+          toast.error("Failed to load problem data");
+          navigate("/admin/problems");
+        }
+      } catch (error) {
+        console.error("Error fetching problem:", error);
+        toast.error("Failed to load problem data");
+        navigate("/admin/problems");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (problemId) {
+      fetchProblemData();
+    }
+  }, [problemId, navigate]);
 
   const handleChange = (field, value) => {
     setProblemData((prev) => ({
@@ -79,32 +97,33 @@ const ProblemAddingPage = () => {
 
       setFormErrors([]);
 
-      const cleanedData = cleanProblemData(problemData, !!editProblem);
+      const cleanedData = cleanProblemData(problemData, true);
 
-      let response;
-      if (problemData._id) {
-        // Update existing problem
-        response = await problemService.updateProblem(problemData._id, cleanedData);
-      } else {
-        // Create new problem
-        response = await problemService.addProblems(cleanedData);
-      }
+      const response = await problemService.updateProblem(problemData._id, cleanedData);
 
       if (response.success) {
-        toast.success(
-          editProblem
-            ? "Problem updated successfully!"
-            : "Problem created successfully!"
-        );
+        toast.success("Problem updated successfully!");
         navigate("/admin/problems");
       } else {
-        toast.error(response.message || "Failed to save problem");
+        toast.error(response.message || "Failed to update problem");
       }
     } catch (error) {
-      console.error("Error saving problem:", error);
+      console.error("Error updating problem:", error);
       toast.error("Something went wrong. Please try again later.");
     }
   };
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-white text-xl">Loading problem data...</div>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
@@ -131,7 +150,7 @@ const ProblemAddingPage = () => {
         )}
 
         <h1 className="mb-8 text-3xl font-bold text-white">
-          {editProblem ? "Edit Problem" : "Create New Problem"}
+          Edit Problem: {problemData.title}
         </h1>
 
         <ProblemAddingComponent
@@ -140,12 +159,18 @@ const ProblemAddingPage = () => {
         />
 
         {/* Submit Button */}
-        <div className="mt-10 flex justify-end">
+        <div className="mt-10 flex justify-end gap-4">
+          <button
+            onClick={handleBack}
+            className="rounded-lg bg-slate-700 px-8 py-3 font-medium text-white shadow-lg transition-all hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+          >
+            Cancel
+          </button>
           <button
             onClick={handleSubmit}
             className="rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 px-8 py-3 font-medium text-white shadow-lg transition-all hover:from-cyan-500 hover:to-blue-500 hover:shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
           >
-            {editProblem ? "Update Problem" : "Create Problem"}
+            Update Problem
           </button>
         </div>
       </div>
@@ -153,4 +178,4 @@ const ProblemAddingPage = () => {
   );
 };
 
-export default ProblemAddingPage;
+export default ProblemEditPage;

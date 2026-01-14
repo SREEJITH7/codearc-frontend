@@ -66,7 +66,7 @@ export const ProblemsListPage = () => {
   };
 
   const handleEdit = (item) => {
-    navigate(`/admin/addproblems`, { state: { problem: item } });
+    navigate(`/admin/problems/edit/${item.id}`);
   };
 
   const handleAddProblem = () => {
