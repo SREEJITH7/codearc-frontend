@@ -6,9 +6,7 @@ export const validateProblem = (data) => {
     errors.push("Title is required");
   }
 
-  if (data.problemId === "" || data.problemId === null || data.problemId === undefined) {
-    errors.push("Problem ID is required");
-  }
+
 
   if (!data.description || !data.description.trim()) {
     errors.push("Description is required");
@@ -42,11 +40,17 @@ export const validateProblem = (data) => {
     errors.push("Complete parameter information is required");
   }
 
+  // ---------- TEST CASES ----------
+  const isFilled = (val) => {
+    if (val === null || val === undefined) return false;
+    if (typeof val === "string") return val.trim().length > 0;
+    return true; // Numbers, arrays, etc. are considered filled if they exist
+  };
+
   // ---------- EXAMPLES ----------
   const validExamples =
-    data.examples?.filter(
-      (ex) => ex.input?.trim() && ex.output?.trim()
-    ) || [];
+    data.examples?.filter((ex) => isFilled(ex.input) && isFilled(ex.output)) ||
+    [];
 
   if (validExamples.length === 0) {
     errors.push("At least one complete example is required");
@@ -55,9 +59,8 @@ export const validateProblem = (data) => {
   // ---------- TEST CASES ----------
   const validTestCases =
     data.testCases?.filter((tc) => {
-      const allInputsFilled =
-        tc.input?.every((input) => input?.trim()) || false;
-      const outputFilled = tc.output?.trim() || false;
+      const allInputsFilled = tc.input?.every((input) => isFilled(input)) || false;
+      const outputFilled = isFilled(tc.output);
       return allInputsFilled && outputFilled;
     }) || [];
 

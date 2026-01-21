@@ -8,6 +8,8 @@ import Table from "../../../component/common/Table";
 import { Search } from "../../../component/common/Search";
 import Pagination from "../../../component/common/Pagination";
 import { ConfirmModal } from "../../../component/common/ConfirmModal";
+import { toast } from "react-toastify"; // Added toast
+import { EditCategoryModal } from "../../../component/admin/EditCategoryModal";
 
 import ProblemAddingPage from "./ProblemAddingPage";
 
@@ -17,13 +19,16 @@ export const CategoriesListPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [modalAction, setModalAction] = useState(null); // 'toggle' or 'delete'
 
   const limit = 5;
   const navigate = useNavigate();
 
-  const openConfirmModal = (category) => {
+  const openConfirmModal = (category, action) => {
     setSelectedCategory(category);
+    setModalAction(action);
     setModalOpen(true);
   };
 
@@ -57,40 +62,88 @@ export const CategoriesListPage = () => {
   };
 
   const handleEdit = (item) => {
-    navigate("/admin/editcategory", { state: { category: item } });
+    setSelectedCategory(item);
+    setEditModalOpen(true);
   };
-const handleConfirmToggle = async () => {
-  if (!selectedCategory) return;
 
-  try {
-    const res = await categoryService.toggleCategoryStatus(
-      selectedCategory.id
-    );
-
-    if (res.success) {
-      
-      if (res.data) {
-        setCategories((prev) =>
-          prev.map((category) =>
-            category.id === selectedCategory.id
-              ? { ...category, status: res.data.status }  
-              : category
-          )
-        );
-      } else {
-        // Fallback: refetch all categories
-        await fetchCategories();
-      }
-    } else {
-      console.error(res.message);
+  const handleSaveEdit = async (newName) => {
+    if (!selectedCategory) return;
+    
+    try {
+        const res = await categoryService.updateCategory(selectedCategory.id, newName);
+        if (res.success) {
+            toast.success("Category updated successfully");
+            await fetchCategories();
+            setEditModalOpen(false);
+            setSelectedCategory(null);
+        } else {
+            toast.error(res.message);
+        }
+    } catch (error) {
+        console.error("Failed to update category:", error);
+        toast.error("Failed to update category");
     }
-  } catch (error) {
-    console.error("Failed to toggle status:", error);
-  } finally {
-    setModalOpen(false);
-    setSelectedCategory(null);
-  }
-};
+  };
+  const handleConfirmAction = async () => {
+    if (!selectedCategory || !modalAction) return;
+
+    if (modalAction === "toggle") {
+        await handleConfirmToggle();
+    } else if (modalAction === "delete") {
+        await handleConfirmDelete();
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+        const res = await categoryService.deleteCategory(selectedCategory.id);
+        if (res.success) {
+            await fetchCategories();
+            toast.success("Category deleted successfully");
+        } else {
+            toast.error(res.message);
+        }
+    } catch (error) {
+        console.error("Failed to delete category:", error);
+        toast.error("Failed to delete category");
+    } finally {
+        setModalOpen(false);
+        setSelectedCategory(null);
+        setModalAction(null);
+    }
+  };
+
+  const handleConfirmToggle = async () => {
+      try {
+        const res = await categoryService.toggleCategoryStatus(
+          selectedCategory.id
+        );
+    
+        if (res.success) {
+          
+          if (res.data) {
+            setCategories((prev) =>
+              prev.map((category) =>
+                category.id === selectedCategory.id
+                  ? { ...category, status: res.data.status }  
+                  : category
+              )
+            );
+          } else {
+            // Fallback: refetch all categories
+            await fetchCategories();
+          }
+        } else {
+          console.error(res.message);
+        }
+      } catch (error) {
+        console.error("Failed to toggle status:", error);
+      } finally {
+        setModalOpen(false);
+        setSelectedCategory(null);
+        setModalAction(null);
+      }
+    };
 
   const handleAddProblemCat = () => {
     console.log("Navigating to add category page...");
@@ -131,20 +184,71 @@ const handleConfirmToggle = async () => {
     },
     {
       key: "toggle",
-      label: "Action",
+      label: "Status",
       render: (item) => (
         <Button
           variant={item.status === "Active" ? "secondary" : "primary"}
           size="sm"
-          onClick={() => openConfirmModal(item)}
+          onClick={() => openConfirmModal(item, "toggle")}
         >
           {item.status === "Active" ? "Block" : "Unblock"}
         </Button>
       ),
     },
+    {
+      key: "delete",
+      label: "Delete",
+      render: (item) => (
+        <Button
+          className="bg-red-500/10 text-red-500 hover:bg-red-500/20 border-red-500/20"
+          size="sm"
+          onClick={() => openConfirmModal(item, "delete")}
+        >
+          Delete
+        </Button>
+      ),
+    },
   ];
 
-  return (
+  // Determine modal content
+  let modalTitle = "";
+  let modalMessage = "";
+  let confirmText = "";
+
+  if (selectedCategory && modalAction === "toggle") {
+      const isBlocking = selectedCategory.status === "Active";
+      modalTitle = isBlocking ? "Block Category" : "Unblock Category";
+      confirmText = isBlocking ? "Block" : "Unblock";
+      
+      if (isBlocking) {
+          const count = selectedCategory.problem_count || 0;
+          modalMessage = (
+            <span>
+                This category has <strong className="text-yellow-400">{count} problems</strong>. 
+                Blocking it will <strong className="text-yellow-400">hide these problems</strong> from users.
+                <br/><br/>
+                Are you sure you want to proceed?
+            </span>
+          );
+      } else {
+          modalMessage = "Are you sure you want to unblock this category?";
+      }
+
+  } else if (selectedCategory && modalAction === "delete") {
+      modalTitle = "Delete Category";
+      const count = selectedCategory.problem_count || 0;
+      modalMessage = (
+        <span>
+            This category has <strong className="text-red-400">{count} problems</strong>. 
+            Deleting it will <strong className="text-red-400">PERMANENTLY DELETE</strong> all associated problems.
+            <br/><br/>
+            Are you sure you want to proceed?
+        </span>
+      );
+      confirmText = "Delete";
+  }
+
+        return (
     <AdminLayout>
       <div className="p-6 space-y-6">
         <div className="flex justify-between items-center">
@@ -180,19 +284,25 @@ const handleConfirmToggle = async () => {
 
         <ConfirmModal
           isOpen={modalOpen}
-          title={
-            selectedCategory?.status === "Active"
-              ? "Block Category"
-              : "Unblock Category"
-          }
-          message={`Are you sure you want to ${
-            selectedCategory?.status === "Active" ? "block" : "unblock"
-          } this category?`}
-          confirmText={
-            selectedCategory?.status === "Active" ? "Block" : "Unblock"
-          }
-          onConfirm={handleConfirmToggle}
-          onCancel={() => setModalOpen(false)}
+          title={modalTitle}
+          message={modalMessage}
+          confirmText={confirmText}
+          onConfirm={handleConfirmAction}
+          onCancel={() => {
+              setModalOpen(false);
+              setModalAction(null);
+              setSelectedCategory(null);
+          }}
+        />
+
+        <EditCategoryModal
+            isOpen={editModalOpen}
+            onClose={() => {
+                setEditModalOpen(false);
+                setSelectedCategory(null);
+            }}
+            onSave={handleSaveEdit}
+            category={selectedCategory}
         />
       </div>
     </AdminLayout>

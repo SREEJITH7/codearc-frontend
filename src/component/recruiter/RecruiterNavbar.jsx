@@ -11,8 +11,6 @@ const RecruiterNavbar = () => {
     { path: "/recruiter/viewallpost", label: "Jobs" },
     { path: "/recruiter/Applicants", label: "Applicants" },
     { path: "/recruiter/shortlist", label: "Shortlist" },
-    { path: "/recruiter/interview", label: "Interview" },
-    { path: "/recruiter/completeinterviews", label: "Completed Interview" },
   ];
 
   const isActive = (path) => location.pathname === path;

@@ -293,8 +293,7 @@ const UserHomePage = () => {
 
   return (
     <UserLayout>
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3 space-y-6">
             {/* Daily Challenge Card */}
@@ -694,7 +693,6 @@ const UserHomePage = () => {
             </div>
           </div>
         </div>
-      </div>
     </UserLayout>
   );
 };

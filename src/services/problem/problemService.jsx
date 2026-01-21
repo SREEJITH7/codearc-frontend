@@ -31,7 +31,7 @@ const addProblems = async (problems) => {
       `${PROBLEM_API}/admin/problems/`,
       problems
     );
-    return response.data;
+    return { success: true, data: response.data };
   } catch (error) {
     return {
       success: false,
@@ -43,10 +43,10 @@ const addProblems = async (problems) => {
 const updateProblem = async (problemId, data) => {
   try {
     const response = await axiosInstance.put(
-      `${ADMIN_API}/updateproblem/${problemId}`,
+      `${PROBLEM_API}/admin/problems/${problemId}/`,
       data
     );
-    return response.data;
+    return { success: true, data: response.data };
   } catch (error) {
     return {
       success: false,
@@ -60,7 +60,7 @@ const deleteProblem = async (problemId) => {
     const response = await axiosInstance.delete(
       `${PROBLEM_API}/admin/problems/${problemId}/delete/`
     );
-    return response.data;
+    return { success: true, data: response.data };
   } catch (error) {
     return {
       success: false,
@@ -90,7 +90,7 @@ const getSingleProblem = async (problemId) => {
       `${PROBLEM_API}/problems/${problemId}/`
     );
     console.log("problem response", response);
-    return response;
+    return response.data;
   } catch (error) {
     console.error("Error fetching single problem:", error);
     throw error;
@@ -102,7 +102,7 @@ const toggleProblemStatus = async (problemId) => {
     const response = await axiosInstance.patch(
       `${PROBLEM_API}/problems/${problemId}/toggle/`
     );
-    return response.data;
+    return { success: true, data: response.data };
   } catch (error) {
     return {
       success: false,
@@ -113,12 +113,12 @@ const toggleProblemStatus = async (problemId) => {
 
 const runCode = async (code, problemId, language) => {
   try {
-    const response = await axiosInstance.post(`${USER_API}/runcode/`, {
+    const response = await axiosInstance.post(`${PROBLEM_API}/problems/run/`, {
       code,
-      problemId,
+      problem_id: problemId,
       language,
     });
-    console.log("res", response);
+    console.log("run result", response);
     return response.data;
   } catch (error) {
     console.error("Error running code:", error);
@@ -128,12 +128,12 @@ const runCode = async (code, problemId, language) => {
 
 const submitCode = async (code, problemId, language) => {
   try {
-    const response = await axiosInstance.post(`${USER_API}/submitcode/`, {
+    const response = await axiosInstance.post(`${PROBLEM_API}/problems/submit/`, {
       code,
-      problemId,
+      problem_id: problemId,
       language,
     });
-    console.log("res", response);
+    console.log("submit result", response);
     return response.data;
   } catch (error) {
     console.error("Error submitting code:", error);
@@ -141,12 +141,22 @@ const submitCode = async (code, problemId, language) => {
   }
 };
 
+const getUserSubmissions = async (problemId) => {
+  try {
+    const response = await axiosInstance.get(`${PROBLEM_API}/problems/${problemId}/submissions/me/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user submissions:", error);
+    throw error;
+  }
+};
+
 const allSubmissions = async (problemId) => {
   try {
-    console.log("submisison ethii");
-    const response = await axiosInstance.get(`${USER_API}/allsubmissions/${problemId}`);
-    console.log("allsubmissions response", response);
-    return response.data.data;
+    console.log("fetching submissions for problem:", problemId);
+    const response = await axiosInstance.get(`${PROBLEM_API}/problems/${problemId}/submissions/`);
+    console.log("allSubmissions response", response);
+    return response.data;
   } catch (error) {
     console.error("Error fetching submissions:", error);
     throw error;
@@ -162,6 +172,7 @@ export const problemService = {
   toggleProblemStatus,
   runCode,
   submitCode,
+  getUserSubmissions,
   allSubmissions,
   deleteProblem,
 };

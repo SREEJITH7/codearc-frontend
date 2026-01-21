@@ -1,37 +1,3 @@
-// import React from "react";
-// import { Route, Routes } from "react-router-dom";
-// import { AdminPrivateRoutes } from "./PrivateRoutes";
-// import { AdminPublicRoutes } from "./PublicRoutes";
-// import { RecruiterPublicRoutes } from "./PublicRoutes";
-// import RecruiterSignup from "../pages/recruiter/auth/RecruiterSignup";
-// import RecruiterLogin from "../pages/recruiter/auth/RecruiterLogin";
-// import RecruiterOtp from "../pages/recruiter/auth/RecruiterOtp";
-// import RecruiterForgotPassword from "../pages/recruiter/auth/RecruiterForgotPassword";
-// import RecruiterResetPassword from "../pages/recruiter/auth/RecruiterResetPassword";
-
-// const RecruiterRoutes = () => {
-
-//   return (
-//     <Routes>
-//       <Route element={<RecruiterPublicRoutes />}>
-//         <Route path="/recruiter/signup" element={<RecruiterSignup />} />
-//         <Route path="/recruiter/login" element={<RecruiterLogin />} />
-//         <Route path="/recruiter/otp" element={<RecruiterOtp />} />
-//         <Route
-//           path="/recruiter/forgot-password"
-//           element={<RecruiterForgotPassword />}
-//         />
-//         <Route
-//           path="/recruiter/reset-password"
-//           element={<RecruiterResetPassword />}
-//         />
-//       </Route>
-
-//       </Routes>
-//   )
-// }
-
-// export default RecruiterRoutes
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { RecruiterPublicRoutes } from "./PublicRoutes";
@@ -43,11 +9,12 @@ import RecruiterResetPassword from "../pages/recruiter/auth/RecruiterResetPasswo
 import RecruiterPortal from "../pages/recruiter/recruiterPages/RecruiterPortalPage";
 import RecruiterProfilePage from "../pages/recruiter/recruiterPages/RecruiterProfilePage";
 import { RecruiterPrivateRoutes } from "./PrivateRoutes";
-import JobPostPage from "../pages/recruiter/recruiterPages/JobsPostPage";
+import JobPostPage from "../pages/recruiter/recruiterPages/JobPostPage";
+import ViewAllJobs from "../pages/recruiter/recruiterPages/ViewAllJobs";
+
 const RecruiterRoutes = () => {
   return (
-      <Routes>
-
+    <Routes>
       {/* ================= PUBLIC ROUTES ================= */}
       <Route element={<RecruiterPublicRoutes />}>
         <Route path="signup" element={<RecruiterSignup />} />
@@ -61,9 +28,9 @@ const RecruiterRoutes = () => {
       <Route element={<RecruiterPrivateRoutes />}>
         <Route path="portal" element={<RecruiterPortal />} />
         <Route path="profile" element={<RecruiterProfilePage />} />
-        <Route path="/jobpost" element={<JobPostPage />} />
+        <Route path="jobpost" element={<JobPostPage />} />
+        <Route path="viewallpost" element={<ViewAllJobs />} />
       </Route>
-
     </Routes>
   );
 };

@@ -41,6 +41,7 @@ import { RecruiterListPage } from "../pages/admin/adminpages/RecruiterListPage";
 
 import { ProblemsListPage } from "../pages/admin/adminpages/ProblemsListPage";
 import ProblemAddingPage from "../pages/admin/adminpages/ProblemAddingPage";
+import ProblemEditPage from "../pages/admin/adminpages/ProblemEditPage";
 import { CategoriesListPage } from "../pages/admin/adminpages/CategoriesListPage";
 import CategoryAddingPage from "../pages/admin/adminpages/CategoryAddingPage";
 
@@ -59,6 +60,7 @@ const AdminRoutes = () => {
         <Route path="recruiter" element={<RecruiterListPage />} />
         <Route path="problems" element={<ProblemsListPage />} />
         <Route path="addproblems" element={<ProblemAddingPage/>} />
+        <Route path="problems/edit/:problemId" element={<ProblemEditPage/>} />
         <Route path="problemcategory" element={<CategoriesListPage/>}/>
         <Route path="addproblemcategory" element={<CategoryAddingPage/>} />
         <Route path="problemcategory/edit/:id" element={<CategoryAddingPage />} />
