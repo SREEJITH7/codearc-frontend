@@ -31,7 +31,7 @@ const addProblems = async (problems) => {
       `${PROBLEM_API}/admin/problems/`,
       problems
     );
-    return response.data;
+    return { success: true, data: response.data };
   } catch (error) {
     return {
       success: false,
@@ -46,7 +46,7 @@ const updateProblem = async (problemId, data) => {
       `${PROBLEM_API}/admin/problems/${problemId}/`,
       data
     );
-    return response.data;
+    return { success: true, data: response.data };
   } catch (error) {
     return {
       success: false,
@@ -60,7 +60,7 @@ const deleteProblem = async (problemId) => {
     const response = await axiosInstance.delete(
       `${PROBLEM_API}/admin/problems/${problemId}/delete/`
     );
-    return response.data;
+    return { success: true, data: response.data };
   } catch (error) {
     return {
       success: false,
@@ -102,7 +102,7 @@ const toggleProblemStatus = async (problemId) => {
     const response = await axiosInstance.patch(
       `${PROBLEM_API}/problems/${problemId}/toggle/`
     );
-    return response.data;
+    return { success: true, data: response.data };
   } catch (error) {
     return {
       success: false,

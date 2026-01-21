@@ -10,7 +10,7 @@ export const categoryService = {
   addCategories: async (name) => {
     try {
       const response = await axiosInstance.post(`${CATEGORY_BASE}/addcategory/`, { name });
-      return response.data;
+      return { success: true, data: response.data };
     } catch (error) {
       console.error("Add category error:", error);
       return {
@@ -50,7 +50,7 @@ export const categoryService = {
         `${CATEGORY_BASE}/updatecategory/${categoryId}/`,
         { name }
       );
-      return response.data;
+      return { success: true, data: response.data };
     } catch (error) {
       return {
         success: false,
@@ -59,10 +59,22 @@ export const categoryService = {
     }
   },
 
+  deleteCategory: async (categoryId) => {
+    try {
+      const response = await axiosInstance.delete(`${CATEGORY_BASE}/deletecategory/${categoryId}/`);
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        message: error?.response?.data?.message || "Failed to delete category",
+      };
+    }
+  },
+
   toggleCategoryStatus: async (categoryId) => {
     try {
       const response = await axiosInstance.patch(`${CATEGORY_BASE}/category/${categoryId}/`);
-      return response.data;
+      return { success: true, data: response.data };
     } catch (error) {
       return {
         success: false,

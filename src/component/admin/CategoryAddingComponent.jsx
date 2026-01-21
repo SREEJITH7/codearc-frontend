@@ -7,10 +7,10 @@ const CategoryAddingComponent = ({ onAdd, initialValue }) => {
 
   const handleAdd = () => {
     const trimmed = categoryName.trim();
-    const isValid = /^[A-Za-z]+$/.test(trimmed);
+    const isValid = /^[A-Za-z\s]+$/.test(trimmed);
 
     if (!isValid) {
-      toast.error("Category name must contain only letters (A-Z)");
+      toast.error("Category name must contain only letters and spaces");
       return;
     }
 

@@ -268,7 +268,7 @@ const UserProfilePage = () => {
     <UserLayout>
       <PremiumSuccessPopup />
 
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-10 px-6 py-10 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-10 py-2">
         {/* ------------------- SIDEBAR -------------------- */}
         <div className="xl:col-span-1 space-y-6">
           <div className="bg-slate-800/60 rounded-3xl p-6">

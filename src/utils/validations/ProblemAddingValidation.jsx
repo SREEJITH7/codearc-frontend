@@ -6,9 +6,7 @@ export const validateProblem = (data) => {
     errors.push("Title is required");
   }
 
-  if (data.problemId === "" || data.problemId === null || data.problemId === undefined) {
-    errors.push("Problem ID is required");
-  }
+
 
   if (!data.description || !data.description.trim()) {
     errors.push("Description is required");

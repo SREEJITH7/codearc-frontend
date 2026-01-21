@@ -4,7 +4,7 @@ import { categoryService } from "../../services/problem/categoryService";
 import { DropdownFilter } from "../common/DropDownFilter";
 import { ADMIN_API } from "../../utils/apiRoutes";
 
-const ProblemAddingComponent = ({ problemData, onChange }) => {
+const  ProblemAddingComponent = ({ problemData, onChange }) => {
   const [newTag, setNewTag] = useState("");
   const [newConstraint, setNewConstraint] = useState("");
   const [newHint, setNewHint] = useState("");
@@ -13,7 +13,7 @@ const ProblemAddingComponent = ({ problemData, onChange }) => {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, []); 
 
 const fetchCategories = async () => {
   try {
@@ -182,8 +182,8 @@ const fetchCategories = async () => {
       <div className="bg-slate-800 p-6 rounded-lg">
         <h2 className="text-xl font-semibold mb-4 text-white">Basic Information</h2>
         
-        {/* Problem ID */}
-        <div className="mb-4">
+        {/* Problem ID - REMOVED (Auto-generated) */}
+        {/* <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Problem ID
           </label>
@@ -194,7 +194,7 @@ const fetchCategories = async () => {
             className="w-full p-2 bg-slate-700 border border-slate-600 rounded text-white"
             placeholder="e.g., 1"
           />
-        </div>
+        </div> */}
 
         {/* Title */}
         <div className="mb-4">

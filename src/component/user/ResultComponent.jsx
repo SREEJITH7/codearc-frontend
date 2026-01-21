@@ -210,7 +210,7 @@ const ResultComponent = ({
         </div>
 
         {/* Case Navigation Tabs */}
-        <div className="flex items-center gap-2 p-4 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-2 p-4 overflow-x-auto custom-scrollbar">
           {testResults.map((result, idx) => (
             <button
               key={idx}

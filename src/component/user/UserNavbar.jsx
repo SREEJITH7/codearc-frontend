@@ -147,7 +147,7 @@ const UserNavbar = () => {
     { path: "/user/home", label: "Problems", active: true },
     { path: "/user/ai-tutor", label: "AI Tutor", active: false },
     { path: "/user/community", label: "Community", active: false },
-    { path: "/user/jobdetails", label: "JobPost", active: false },
+    { path: "/user/jobdetails", label: "Jobs", active: true },
     { path: "/user/interview", label: "Interview", active: false },
   ];
 

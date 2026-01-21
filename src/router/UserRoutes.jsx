@@ -13,7 +13,8 @@ import { UserResetPassword } from "../pages/user/auth/UserResetPassword";
 // import GoogleCallback from "../pages/user/auth/GoogleCallback";
 import UserProfilePage from "../pages/user/userpages/UserProfilePage";
 import SingleProblemPage from "../pages/user/userpages/SingleProblemPage";
-
+import JobDetailsPage from "../pages/user/userpages/JobDetailsPage";
+import JobApplyPage from "../pages/user/userpages/JobApplyPage";
 
 export default function UserRoutes() {
   return (
@@ -36,6 +37,8 @@ export default function UserRoutes() {
         <Route path="user/home" element={<UserHomePage />} />
         <Route path="user/profile" element={<UserProfilePage />} />
         <Route path="user/singleproblem/:problemId" element={<SingleProblemPage />} />
+        <Route path="user/jobdetails" element={<JobDetailsPage/>} />
+        <Route path="user/job-apply/:jobId" element={<JobApplyPage />} />
       </Route>
     </Routes>
   );
