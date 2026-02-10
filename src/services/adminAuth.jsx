@@ -32,9 +32,9 @@ login: async (formData) => {
   }
 },
 
-  // -------------------------------
+   
   // GET ALL USERS (STUDENTS)
-  // -------------------------------
+   
   getAllUsers: async ({ page, limit, search, status } = {}) => {
     try {
       const response = await axiosInstance.get(
@@ -56,9 +56,9 @@ login: async (formData) => {
     }
   },
 
-  // -------------------------------
+   
   // GET ALL RECRUITERS
-  // -------------------------------
+   
   getAllRecruiters: async ({ page, limit, search, status } = {}) => {
     try {
       const response = await axiosInstance.get(
@@ -80,9 +80,9 @@ login: async (formData) => {
     }
   },
 
-  // -------------------------------
+  
   // TOGGLE STUDENT ACTIVE / INACTIVE
-  // -------------------------------
+  
   toggleUserStatus: async (userId) => {
     try {
       const response = await axiosInstance.post(
@@ -103,9 +103,7 @@ login: async (formData) => {
     }
   },
 
-  // -------------------------------
   // TOGGLE RECRUITER ACTIVE / INACTIVE
-  // -------------------------------
   toggleRecruiterStatus: async (id) => {
     try {
       const response = await axiosInstance.post(
@@ -126,9 +124,7 @@ login: async (formData) => {
     }
   },
 
-  // -------------------------------
   // APPROVE APPLICANT
-  // -------------------------------
   acceptApplicant: async (applicantId) => {
     try {
       const response = await axiosInstance.patch(
@@ -149,9 +145,7 @@ login: async (formData) => {
     }
   },
 
-  // -------------------------------
   // REJECT APPLICANT
-  // -------------------------------
   rejectApplicant: async (applicantId, rejectReason) => {
     try {
       const response = await axiosInstance.patch(
@@ -173,9 +167,7 @@ login: async (formData) => {
     }
   },
 
-  // -------------------------------
   // GET ALL APPLICANTS
-  // -------------------------------
   getAllApplicants: async ({ page, limit } = {}) => {
     try {
       const response = await axiosInstance.get(

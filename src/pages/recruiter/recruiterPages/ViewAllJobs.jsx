@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Briefcase } from "lucide-react";
+import { toast } from "react-toastify";
 
 import { JobsLoadingSkeleton } from "../../../utils/shimmer/JobCardSkeleton";
 import RecruiterLayout from "../../../layouts/RecruiterLayout";
@@ -116,9 +117,17 @@ const ViewAllJobs = () => {
               : job
           )
         );
+        
+        if (response.data.status === "Inactive") {
+          toast.success("Job closed successfully");
+        } else {
+          toast.success("Job reopened successfully");
+        }
       }
     } catch (error) {
       console.error("Error toggling job status:", error);
+      const errorMsg = error.response?.data?.message || "Something went wrong";
+      toast.error(errorMsg);
     } finally {
       setModalOpen(false);
       setJobToToggle(null);
@@ -266,14 +275,16 @@ const ViewAllJobs = () => {
         isOpen={modalOpen}
         title={
           jobToToggle?.status === "Active"
-            ? "Deactivate Job"
-            : "Activate Job"
+            ? "Close Job"
+            : "Reopen Job"
         }
-        message={`Are you sure you want to ${
-          jobToToggle?.status === "Active" ? "deactivate" : "activate"
-        } this job?`}
+        message={
+          jobToToggle?.status === "Active"
+            ? "Are you sure you want to close this job? Candidates will no longer be able to apply."
+            : "Are you sure you want to reopen this job?"
+        }
         confirmText={
-          jobToToggle?.status === "Active" ? "Deactivate" : "Activate"
+          jobToToggle?.status === "Active" ? "Close Job" : "Reopen Job"
         }
         onConfirm={handleConfirmToggle}
         onCancel={() => setModalOpen(false)}

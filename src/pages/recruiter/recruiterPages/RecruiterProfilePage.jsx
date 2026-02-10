@@ -51,6 +51,7 @@ const RecruiterProfilePage = () => {
         createdAt: d.created_at || "",
         profileImage: d.profileimage || "",
         location: d.location || "",
+        contactPerson: d.contact_person || "",
       });
     } catch (error) {
       const errorMessage = error?.response?.data?.message;

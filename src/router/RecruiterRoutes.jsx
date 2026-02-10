@@ -11,6 +11,10 @@ import RecruiterProfilePage from "../pages/recruiter/recruiterPages/RecruiterPro
 import { RecruiterPrivateRoutes } from "./PrivateRoutes";
 import JobPostPage from "../pages/recruiter/recruiterPages/JobPostPage";
 import ViewAllJobs from "../pages/recruiter/recruiterPages/ViewAllJobs";
+import ApplicantsPage from "../pages/recruiter/recruiterPages/ApplicantsPage";
+import ApplicantProfilePage from "../pages/recruiter/recruiterPages/ApplicantProfilePage";
+import SendOfferPage from "../pages/recruiter/recruiterPages/SendOfferPage";
+import ShortlistedApplicantsPage from "../pages/recruiter/recruiterPages/ShortlistedApplicantsPage";
 
 const RecruiterRoutes = () => {
   return (
@@ -30,6 +34,10 @@ const RecruiterRoutes = () => {
         <Route path="profile" element={<RecruiterProfilePage />} />
         <Route path="jobpost" element={<JobPostPage />} />
         <Route path="viewallpost" element={<ViewAllJobs />} />
+        <Route path="applicants" element={<ApplicantsPage />} />
+        <Route path="shortlist" element={<ShortlistedApplicantsPage />} />
+        <Route path="applicants-details/:applicationId" element={<ApplicantProfilePage/>} />
+        <Route path="applicants-details/:applicationId/send-offer" element={<SendOfferPage />} />
       </Route>
     </Routes>
   );

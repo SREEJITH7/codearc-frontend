@@ -183,7 +183,7 @@ export default function RecruiterPortalPage() {
             </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
-            AlgoNest streamlines your recruitment process with intelligent
+            CodeArc streamlines your recruitment process with intelligent
             matching, automated workflows, and data-driven insights.
           </p>
         </div>

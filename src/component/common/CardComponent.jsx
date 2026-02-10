@@ -2,7 +2,6 @@ import {
   MapPin,
   Clock,
   Users,
-  DollarSign,
   Briefcase,
   Edit,
   Eye,
@@ -16,16 +15,18 @@ export const JobCard = ({
   onApply,
   showActions = true,
 }) => {
+  const isApplied = job?.isApplied;
+
   const getStatusColor = (status) => {
     return status === "Active"
       ? "bg-green-500/20 text-green-400"
       : "bg-red-500/20 text-red-400";
   };
 
-  const isJobActive = job.status === "Active";
-
   return (
     <div className="bg-slate-700/40 backdrop-blur-md rounded-lg border border-slate-600/50 p-6 hover:border-slate-500/70 transition-all">
+      
+      {/* HEADER */}
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-lg font-semibold text-white line-clamp-2 flex-1">
           {job.jobrole}
@@ -39,15 +40,20 @@ export const JobCard = ({
         </span>
       </div>
 
+      {/* DETAILS */}
       <div className="space-y-2 mb-6">
         <div className="flex items-center text-sm text-gray-300">
           <Clock className="w-4 h-4 mr-2 text-green-400" />
-          <span className="capitalize">{job.workTime.replace("-", " ")}</span>
+          <span className="capitalize">
+            {job.workTime?.replace("-", " ")}
+          </span>
         </div>
 
         <div className="flex items-center text-sm text-gray-300">
           <Users className="w-4 h-4 mr-2 text-cyan-400" />
-          <span className="capitalize">{job.workMode.replace("-", " ")}</span>
+          <span className="capitalize">
+            {job.workMode?.replace("-", " ")}
+          </span>
         </div>
 
         <div className="flex items-center text-sm text-gray-300">
@@ -56,22 +62,16 @@ export const JobCard = ({
         </div>
 
         <div className="flex items-center text-sm text-gray-300">
-          <DollarSign className="w-4 h-4 mr-2 text-emerald-400" />
-          <span>
-            {job.minSalary && job.maxSalary
-              ? `${job.minSalary} - ${job.maxSalary} LPA`
-              : "Not specified"}
-          </span>
-        </div>
-
-        <div className="flex items-center text-sm text-gray-300">
           <Briefcase className="w-4 h-4 mr-2 text-orange-400" />
           <span>{job.minExperience}+ years</span>
         </div>
       </div>
 
+      {/* ACTIONS */}
       {showActions && (
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+
+          {/* 👁️ VIEW (always just view, never apply) */}
           {onView && (
             <button
               onClick={() => onView(job._id)}
@@ -81,7 +81,7 @@ export const JobCard = ({
               View
             </button>
           )}
-
+          {/* ✏️ UPDATE (admin/recruiter only) */}
           {onUpdate && (
             <button
               onClick={() => onUpdate(job._id)}
@@ -92,32 +92,36 @@ export const JobCard = ({
             </button>
           )}
 
+          {/* 🔄 TOGGLE STATUS (Recruiter/Admin only) */}
           {toggleStatus && (
             <button
               onClick={() => toggleStatus(job._id)}
-              className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all
-              ${
+              className={`flex-1 px-4 py-2 rounded-lg transition-all text-sm font-semibold flex items-center justify-center gap-2 ${
                 job.status === "Active"
-                  ? "bg-green-600/80 hover:bg-green-700 text-white"
-                  : "bg-red-600/80 hover:bg-red-700 text-white"
+                  ? "bg-slate-800/50 border border-red-500/30 text-red-400 hover:bg-red-500/10"
+                  : "bg-slate-800/50 border border-green-500/30 text-green-400 hover:bg-green-500/10"
               }`}
             >
-              {job.status === "Active" ? "Deactivate" : "Activate"}
+              {job.status === "Active" ? "Close Job" : "Reopen Job"}
             </button>
           )}
 
-          {showActions && onApply && (
+          {/* 📝 APPLY / APPLIED */}
+          {onApply && (
             <button
-              onClick={() => isJobActive && onApply(job._id)}
-              disabled={!isJobActive}
-              className={`cursor-pointer w-full px-4 py-2 rounded-lg transition-all text-sm font-semibold flex items-center justify-center gap-2
+              onClick={() =>
+                isApplied
+                  ? onView(job._id)     // 👉 go to tracking / applied view
+                  : onApply(job._id)    // 👉 go to apply page
+              }
+              className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all
                 ${
-                  isJobActive
-                    ? "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500"
-                    : "bg-gray-600 cursor-not-allowed opacity-50"
+                  isApplied
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
                 }`}
             >
-              {isJobActive ? "Apply Job" : "Job Inactive"}
+              {isApplied ? "✅ Applied" : "Apply Now"}
             </button>
           )}
         </div>
@@ -125,3 +129,71 @@ export const JobCard = ({
     </div>
   );
 };
+
+
+// ---------------------------------------
+// import {
+//   MapPin,
+//   Clock,
+//   Users,
+//   Briefcase,
+//   Eye,
+// } from "lucide-react";
+
+// export const JobCard = ({ job, onView, onApply }) => {
+//   const isApplied = job?.isApplied;
+
+//   return (
+//     <div className="bg-slate-700/40 rounded-lg p-6 border border-slate-600">
+//       <h3 className="text-lg font-semibold text-white mb-2">
+//         {job.jobrole}
+//       </h3>
+
+//       <div className="text-gray-300 space-y-1 mb-4">
+//         <div className="flex items-center">
+//           <Clock className="w-4 h-4 mr-2" />
+//           {job.workTime}
+//         </div>
+//         <div className="flex items-center">
+//           <Users className="w-4 h-4 mr-2" />
+//           {job.workMode}
+//         </div>
+//         <div className="flex items-center">
+//           <MapPin className="w-4 h-4 mr-2" />
+//           {job.jobLocation}
+//         </div>
+//         <div className="flex items-center">
+//           <Briefcase className="w-4 h-4 mr-2" />
+//           {job.minExperience}+ years
+//         </div>
+//       </div>
+
+//       <div className="flex gap-2">
+//         {/* 👁️ VIEW */}
+//         <button
+//           onClick={() => onView(job._id)}
+//           className="flex-1 bg-slate-800 py-2 rounded-lg flex items-center justify-center gap-2"
+//         >
+//           <Eye className="w-4 h-4" />
+//           View
+//         </button>
+
+//         {/* 📝 APPLY / APPLIED */}
+//         <button
+//           onClick={() =>
+//             isApplied
+//               ? onView(job._id)
+//               : onApply(job._id)
+//           }
+//           className={`flex-1 py-2 rounded-lg ${
+//             isApplied
+//               ? "bg-green-500/20 text-green-400"
+//               : "bg-blue-600 text-white"
+//           }`}
+//         >
+//           {isApplied ? "✅ Applied" : "Apply Now"}
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };

@@ -11,16 +11,16 @@ import LoadingOverlay from "../common/LoadingOverlay";
 const RecruiterProfileEditModal = ({ profile, onClose, onProfileUpdate }) => {
   const [loading, setLoading] = useState(false);
 
-  const [companyName, setCompanyName] = useState(profile.company_name || "");
-  const [companyType, setCompanyType] = useState(profile.company_type || "");
-  const [contactPerson, setContactPerson] = useState(profile.contact_person || "");
+  const [companyName, setCompanyName] = useState(profile.companyName || profile.company_name || "");
+  const [companyType, setCompanyType] = useState(profile.companyType || profile.company_type || "");
+  const [contactPerson, setContactPerson] = useState(profile.contactPerson || profile.contact_person || "");
   const [phone, setPhone] = useState(profile.phone || "");
   const [location, setLocation] = useState(profile.location || "");
-  const [yearEstablished, setYearEstablished] = useState(profile.year_established || "");
+  const [yearEstablished, setYearEstablished] = useState(profile.yearEstablished || profile.year_established || "");
   const [image, setImage] = useState(null);
   const [certificate, setCertificate] = useState(null);
   const [existingCertificate, setExistingCertificate] = useState(
-    profile?.registration_certificate || null
+    profile?.registrationCertificate || profile?.registration_certificate || null
   );
 
   const handleImageChange = (e) => {
@@ -33,13 +33,13 @@ const handleSave = async () => {
   const formData = new FormData();
 
   // Only append if value exists and is different from original
-  if (companyName && companyName !== profile.company_name) {
+  if (companyName && companyName !== (profile.companyName || profile.company_name)) {
     formData.append("company_name", companyName);
   }
-  if (companyType && companyType !== profile.company_type) {
+  if (companyType && companyType !== (profile.companyType || profile.company_type)) {
     formData.append("company_type", companyType);
   }
-  if (contactPerson && contactPerson !== profile.contact_person) {
+  if (contactPerson && contactPerson !== (profile.contactPerson || profile.contact_person)) {
     formData.append("contact_person", contactPerson);
   }
   if (phone && phone !== profile.phone) {
@@ -48,7 +48,7 @@ const handleSave = async () => {
   if (location && location !== profile.location) {
     formData.append("location", location);
   }
-  if (yearEstablished && yearEstablished !== profile.year_established) {
+  if (yearEstablished && yearEstablished !== (profile.yearEstablished || profile.year_established)) {
     formData.append("year_established", yearEstablished);
   }
 

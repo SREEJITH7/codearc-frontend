@@ -48,14 +48,8 @@ export const jobService = {
     // Fetch location suggestions (using OpenStreetMap Nominatim API)
     fetchLocationSuggestions: async (query) => {
         try {
-            // We can use the Nominatim API directly for location suggestions
-            const response = await fetch(
-                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-                    query
-                )}&addressdetails=1&limit=5`
-            );
-            const data = await response.json();
-            return { data: { success: true, data: data } };
+            const response = await axiosInstance.get(`/api/recruiter/jobs/locations/?q=${encodeURIComponent(query)}`);
+            return response;
         } catch (error) {
             console.error("Error fetching location suggestions:", error);
             return { data: { success: false, data: [] } };
@@ -93,7 +87,7 @@ export const jobService = {
     },
 
     // Get all jobs for users (publicly available jobs)
-    jobDetails: async ({ page = 1, limit = 6, search, status, workmode, worktime }) => {
+    jobDetails: async ({ page = 1, limit = 6, search, status, workmode, worktime, skills, location }) => {
         try {
             const params = new URLSearchParams();
             params.append('page', page);
@@ -102,6 +96,8 @@ export const jobService = {
             if (status) params.append('status', status);
             if (workmode) params.append('workmode', workmode);
             if (worktime) params.append('worktime', worktime);
+            if (skills) params.append('skills', skills);
+            if (location) params.append('location', location);
 
             const response = await axiosInstance.get(`/api/user/jobs/?${params.toString()}`);
             return response;
