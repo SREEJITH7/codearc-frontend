@@ -245,9 +245,9 @@ const ProblemList = ({
       label: "Acceptance",
       render: (problem) => (
         <span className="text-slate-300 text-sm">
-          {problem.acceptanceRate
+          {typeof problem.acceptanceRate === 'number'
             ? `${problem.acceptanceRate.toFixed(1)}%`
-            : "N/A"}
+            : "0.0%"}
         </span>
       ),
     },

@@ -9,7 +9,7 @@ const RecruiterNavbar = () => {
   const navItems = [
     { path: "/recruiter/portal", label: "Home" },
     { path: "/recruiter/viewallpost", label: "Jobs" },
-    { path: "/recruiter/Applicants", label: "Applicants" },
+    { path: "/recruiter/applicants", label: "Applicants" },
     { path: "/recruiter/shortlist", label: "Shortlist" },
   ];
 

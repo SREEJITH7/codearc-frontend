@@ -21,7 +21,7 @@ const SingleProblemPage = () => {
   const [code, setCode] = useState("")
   const [consoleOutput, setConsoleOutput] = useState("")
   const [isDragging, setIsDragging] = useState(false)
-  const [topHeight, setTopHeight] = useState(60) // Default 60% for compiler
+  const [topHeight, setTopHeight] = useState(60) 
   const [isDraggingVertical, setIsDraggingVertical] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [language, setLanguage] = useState(() => {
@@ -49,7 +49,6 @@ const SingleProblemPage = () => {
     fetchProblemData()
   }, [problemId])
 
-  // Load saved code on mount or when problem/language changes
   useEffect(() => {
     if (!problemData || !problemId) return;
 
@@ -63,7 +62,6 @@ const SingleProblemPage = () => {
     }
   }, [problemData, problemId, language]);
 
-  // Save code to localStorage whenever it changes
   useEffect(() => {
     if (problemId && language && code) {
       const key = `code_${problemId}_${language}`;
@@ -71,7 +69,6 @@ const SingleProblemPage = () => {
     }
   }, [code, problemId, language]);
 
-  // Save preferred language to localStorage
   useEffect(() => {
     localStorage.setItem("preferred_language", language);
   }, [language]);

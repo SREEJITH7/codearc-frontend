@@ -35,12 +35,15 @@ const JobPostPage = () => {
     
     return {
       title: formData.role,
-      // Combining details into description for now to avoid additional model changes
-      description: `Description: ${formData.responsibilities.join(". ") || "No responsibilities listed."}\n\nWork Time: ${formData.workTime}\nSalary: ${formData.minSalary}-${formData.maxSalary} LPA`,
+      description: "No description provided", // Or use a field if added to form
       location: formData.jobLocation,
       job_type: mappedJobType,
       skills: formData.requirements,
       experience: parseInt(formData.minExperience) || 0,
+      responsibilities: formData.responsibilities,
+      workTime: formData.workTime,
+      minSalary: parseInt(formData.minSalary) || 0,
+      maxSalary: parseInt(formData.maxSalary) || 0,
       status: "OPEN",
     };
   };
