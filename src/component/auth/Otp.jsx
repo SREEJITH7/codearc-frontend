@@ -5,7 +5,7 @@ import Button from "../common/Button";
 
 const Otp = ({ role, auth, onSubmit, onResend }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(60);
   const [error, setError] = useState("");
 
   const inputRefs = useRef([]);
@@ -54,7 +54,7 @@ const Otp = ({ role, auth, onSubmit, onResend }) => {
   };
 
   const handleResend = () => {
-    setTimer(30);
+    setTimer(60);
     setOtp(["", "", "", "", "", ""]);
     inputRefs.current[0]?.focus();
     onResend && onResend();
