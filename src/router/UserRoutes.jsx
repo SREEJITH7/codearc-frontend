@@ -17,6 +17,9 @@ import JobDetailsPage from "../pages/user/userpages/JobDetailsPage";
 import JobApplyPage from "../pages/user/userpages/JobApplyPage";
 import UserApplicationPage from "../pages/user/userpages/UserApplicationPage";
 
+import AiChatPage from "../component/ai/AiChatPage";
+
+
 export default function UserRoutes() {
   return (
     <Routes>
@@ -29,11 +32,11 @@ export default function UserRoutes() {
         <Route path="user/reset-password" element={<UserResetPassword />} />
         <Route path="user/otp" element={<UserOtp />} />
         
-        {/* ✅ FIXED: Match Django's redirect URL */}
+        {/* Match Django's redirect URL */}
         {/* <Route path="auth/google/callback" element={<GoogleCallback />} /> */}
       </Route>
 
-      {/* ✅ FIXED: Private routes are now separate, not nested in public */}
+      {/* Private routes are now separate, not nested in public */}
       <Route element={<UserPrivateRoutes />}>
         <Route path="user/home" element={<UserHomePage />} />
         <Route path="user/profile" element={<UserProfilePage />} />
@@ -41,6 +44,7 @@ export default function UserRoutes() {
         <Route path="user/jobdetails" element={<JobDetailsPage/>} />
         <Route path="user/job-apply/:jobId" element={<JobApplyPage />} />
         <Route path="user/applications/:jobId" element={<UserApplicationPage />} />
+        <Route path="user/ai-tutor" element={<AiChatPage />} />
       </Route>
     </Routes>
   );

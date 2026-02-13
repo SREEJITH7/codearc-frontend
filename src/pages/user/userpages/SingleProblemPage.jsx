@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import CompilerComponent from "../../../component/user/CompilerComponent"
 import ProblemDetailsComponent from "../../../component/user/ProblemDetailsComponent"
 import ResultComponent from "../../../component/user/ResultComponent"
@@ -10,6 +10,7 @@ import { SubscriptionModal } from "../../../component/user/SubscriptionModal"
 
 const SingleProblemPage = () => {
   const { problemId } = useParams()
+  const navigate = useNavigate()
 
   const [problemData, setProblemData] = useState(null)
   const [testResults, setTestResults] = useState([])
@@ -75,7 +76,9 @@ const SingleProblemPage = () => {
 
 
   const handleExplainError = async ({ code, errorLog, problemStatement }) => {
-    console.log("AI Explanation requested but service not found.")
+    const prompt = `I'm working on the problem: "${problemData?.title}".\n\nMy code:\n\`\`\`${language}\n${code}\n\`\`\`\n\nI'm getting this error/output:\n\`\`\`\n${errorLog}\n\`\`\`\n\nCan you explain what's wrong and guide me towards a solution?`;
+    
+    navigate("/ai-tutor", { state: { initialPrompt: prompt } });
   }
 
   const handleRunCode = async (code, problemId, language) => {
