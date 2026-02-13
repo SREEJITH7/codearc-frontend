@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ CodeArc Frontend
+#  CodeArc Frontend
 
 **Modern, modular frontend for the CodeArc developer platform.**
 
