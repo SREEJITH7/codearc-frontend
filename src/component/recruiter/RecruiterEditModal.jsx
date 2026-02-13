@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Building2, Phone, MapPin, User, UploadCloud, X ,CalendarDays} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Import these from your services
+ 
 import { toast } from "react-toastify";
 import { recruiterAuthService } from "../../services/RecruiterAuth";
 
@@ -32,7 +32,6 @@ const RecruiterProfileEditModal = ({ profile, onClose, onProfileUpdate }) => {
 const handleSave = async () => {
   const formData = new FormData();
 
-  // Only append if value exists and is different from original
   if (companyName && companyName !== (profile.companyName || profile.company_name)) {
     formData.append("company_name", companyName);
   }
@@ -52,11 +51,9 @@ const handleSave = async () => {
     formData.append("year_established", yearEstablished);
   }
 
-  // Files are always sent if selected (they can't be "unchanged")
   if (image) formData.append("profileimage", image);
   if (certificate) formData.append("registration_certificate", certificate);
 
-  // If nothing changed → don't send request
   if (formData.entries().next().done) {
     toast.info("No changes detected");
     onClose();
@@ -83,7 +80,6 @@ const handleSave = async () => {
   }
 };
 
-  // Generate years from 1900 to current year (2025 as per context)
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 1900 + 1 }, (_, i) => currentYear - i);
 
@@ -120,7 +116,7 @@ const handleSave = async () => {
               shadow-2xl
             "
           >
-            {/* CLOSE BUTTON */}
+            
             <button
               onClick={onClose}
               className="absolute top-5 right-5 text-gray-400 hover:text-red-500 transition"
@@ -128,14 +124,14 @@ const handleSave = async () => {
               <X className="w-6 h-6" />
             </button>
 
-            {/* TITLE */}
+            
             <h2 className="text-2xl lg:text-3xl font-bold text-center mb-6 lg:mb-10">
               Edit Recruiter Profile
             </h2>
 
-            {/* MAIN GRID */}
+            
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
-              {/* LEFT COLUMN */}
+              
               <div className="space-y-6 lg:space-y-8">
                 {/* COMPANY LOGO */}
                 <div className="flex justify-center">
@@ -155,9 +151,9 @@ const handleSave = async () => {
                         alt="Company Logo"
                         className="w-full h-full rounded-full object-cover"
                       />
-                    ) : profile?.profileimage ? (
+                    ) : profile?.profileImage ? (
                       <img
-                        src={profile.profileimage}
+                        src={profile.profileImage.startsWith("/media") ? `http://localhost:8000${profile.profileImage}` : profile.profileImage}
                         alt="Company Logo"
                         className="w-full h-full rounded-full object-cover"
                       />
