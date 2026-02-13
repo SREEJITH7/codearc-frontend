@@ -1,195 +1,236 @@
+<div align="center">
 
-🚀 CodeArc Frontend — React + Vite
+# ⚡ CodeArc Frontend
 
-This is the frontend UI for the CodeArc platform, built using React, Vite, Redux Toolkit, and Axios.
-It provides user, admin, and recruiter interfaces with secure authentication, dashboards, profile management, and OAuth login.
+**Modern, modular frontend for the CodeArc developer platform.**
 
-📌 Features
-🔐 Authentication
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite)](https://vitejs.dev/)
+[![Redux Toolkit](https://img.shields.io/badge/Redux-Toolkit-764ABC?style=flat-square&logo=redux)](https://redux-toolkit.js.org/)
+[![React Router](https://img.shields.io/badge/React_Router-v6-CA4245?style=flat-square&logo=reactrouter)](https://reactrouter.com/)
+[![License](https://img.shields.io/badge/License-Private-red?style=flat-square)](./LICENSE)
 
-User Login / Signup
+[Getting Started](#-getting-started) · [Architecture](#-architecture) · [Features](#-features) · [API Integration](#-api-integration) · [Deployment](#-deployment) · [Contributing](#-contributing)
 
-Admin & Recruiter login
+</div>
 
-OTP verification
+---
 
-Forgot + Reset Password
+## Overview
 
-Google OAuth
+CodeArc Frontend is the React + Vite UI layer for the CodeArc platform. It provides role-based interfaces for **Users**, **Admins**, and **Recruiters**, with secure JWT + OAuth authentication, protected routing, and a centralized Axios API client.
 
-GitHub OAuth
+---
 
-🎨 UI Features
+## Features
 
-Landing page with hero, features, join section
+### Authentication
+- Email/password login and signup
+- OTP verification flow
+- Forgot & reset password
+- Google OAuth (popup-based)
+- GitHub OAuth (popup-based)
+- Admin and Recruiter dedicated login
 
-Modular component architecture
+### UI & UX
+- Landing page with hero, features, and join sections
+- Responsive dashboards per role (User / Admin / Recruiter)
+- Protected routes with role-level access control
+- Public routes redirect authenticated users automatically
 
-Responsive layouts for Admin / User / Recruiter
+### Engineering
+- Global state with Redux Toolkit
+- Centralized Axios client with request/response interceptors
+- Automatic access token injection and refresh
+- Modular, reusable component architecture
+- Custom hooks for shared logic
 
-Protected routes (Private & Public routes)
+---
 
-Global state using Redux Toolkit
+## Tech Stack
 
-Axios API integration
+| Layer | Technology |
+|---|---|
+| UI Framework | React 18 |
+| Build Tool | Vite |
+| State Management | Redux Toolkit |
+| Routing | React Router v6 |
+| API Client | Axios |
+| Authentication | JWT + Google & GitHub OAuth |
+| Styling | CSS / Tailwind CSS |
 
-🧩 Frontend Architecture
+---
 
-Clean folder structure
+## Architecture
 
-Reusable UI components
-
-Custom hooks
-
-Config-based API calls
-
-Centralized auth + token management
-
-Router-level access control
-
-📂 Project Structure
+```
 src/
- ┣ assets/
- ┣ components/
- ┃ ┣ admin/
- ┃ ┣ auth/
- ┃ ┣ common/
- ┃ ┣ landing/
- ┃ ┗ user/
- ┣ config/
- ┣ hooks/
- ┣ layouts/
- ┣ lib/
- ┣ pages/
- ┣ router/
- ┣ services/
- ┣ store/
- ┣ types/
- ┣ utils/
- ┣ App.jsx
- ┗ main.jsx
+├── assets/                 # Static files (images, icons, fonts)
+├── components/
+│   ├── admin/              # Admin-specific UI components
+│   ├── auth/               # Login, Signup, OTP, OAuth components
+│   ├── common/             # Shared/reusable components
+│   ├── landing/            # Hero, Features, Join section
+│   └── user/               # User dashboard components
+├── config/                 # Environment and API config
+├── hooks/                  # Custom React hooks
+├── layouts/                # Page-level layout wrappers
+├── lib/
+│   └── axios.js            # Axios instance with interceptors
+├── pages/                  # Route-level page components
+├── router/                 # Route definitions, Private/Public guards
+├── services/               # API service functions
+├── store/                  # Redux slices and store config
+├── types/                  # TypeScript / JSDoc types
+├── utils/                  # Utility/helper functions
+├── App.jsx
+└── main.jsx
+```
 
+---
 
-This modular structure keeps your UI scalable and maintainable.
+## Getting Started
 
-⚙️ Tech Stack
-Feature	Technology
-UI Framework	React 18
-Build Tool	Vite
-State Management	Redux Toolkit
-Routing	React Router
-API Client	Axios
-Auth	JWT + OAuth
-Styling	CSS / Tailwind (optional)
-🔧 Setup Instructions
+### Prerequisites
 
-Follow these steps to run the frontend locally.
+- Node.js `>= 18.x`
+- npm `>= 9.x` or yarn
 
-1️⃣ Clone the repository
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/SREEJITH7/codearc-frontend.git
 cd codearc-frontend
+```
 
-2️⃣ Install dependencies
+### 2. Install Dependencies
+
+```bash
 npm install
-
-
-(or)
-
+# or
 yarn install
+```
 
-3️⃣ Create .env file
+### 3. Configure Environment Variables
 
-Inside the project root:
+Create a `.env` file in the project root:
 
+```env
 VITE_API_URL=http://localhost:8000
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
 VITE_GITHUB_CLIENT_ID=your_github_client_id
-VITE_CLOUDINARY_BASE_URL=placeholder
-VITE_APP_NAME=YourAppName
+VITE_CLOUDINARY_BASE_URL=your_cloudinary_base_url
+VITE_APP_NAME=CodeArc
+```
 
+> **Warning:** Never commit `.env` to version control. It is already listed in `.gitignore`.
 
-⚠️ Never commit .env to GitHub
-(.gitignore already protects it)
+### 4. Start the Development Server
 
-4️⃣ Start development server
+```bash
 npm run dev
+```
 
+The app will be available at **http://localhost:5173**
 
-Your frontend will run at:
+---
 
-👉 http://localhost:5173/
+## Authentication Flow
 
-🔐 Authentication Flow
-User Login / Signup
+### JWT (Email / Password)
+1. User submits credentials → request sent to Django backend
+2. Backend returns `access` and `refresh` tokens
+3. Tokens stored and attached to all subsequent requests via Axios interceptors
+4. Protected routes check token validity; expired tokens are refreshed automatically
 
-Requests go to Django backend via stored API routes
+### OAuth (Google / GitHub)
+1. Popup window opens the provider's OAuth consent screen
+2. Provider redirects back with an auth code
+3. Backend exchanges the code for tokens
+4. User session is established automatically — no manual login required
 
-Access & refresh tokens stored & validated
+---
 
-Protected routes restrict unauthorized access
+## API Integration
 
-Google & GitHub OAuth
+All API communication is handled through a single Axios instance at `src/lib/axios.js`.
 
-Popup-based login
+**Interceptor responsibilities:**
 
-Backend handles token exchange
+| Interceptor | Behavior |
+|---|---|
+| Request | Attaches `Authorization: Bearer <access_token>` header |
+| Response (401) | Silently refreshes access token and retries the original request |
+| Response (error) | Normalizes and propagates errors for UI handling |
 
-User is auto-logged in
+---
 
-📡 API Communication
+## Scripts
 
-All API calls use a centralized:
+| Command | Description |
+|---|---|
+| `npm run dev` | Start local development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
 
-src/lib/axios.js
+---
 
+## Git Workflow
 
-with interceptors for:
-
-token refresh
-
-adding access token to headers
-
-handling errors gracefully
-
-🏗 Recommended Git Branch Workflow
+```
 main
-│
 ├── feature/auth-ui
 ├── feature/user-profile-ui
 ├── feature/admin-dashboard-ui
 ├── feature/recruiter-pages
 └── feature/landing-page
+```
 
+**Process:** `feature branch` → Pull Request → Code Review → Merge to `main`
 
-Each feature → PR → review → merge to main.
+Use clear, descriptive commit messages:
+```bash
+git commit -m "feat(auth): add GitHub OAuth popup flow"
+git commit -m "fix(router): redirect authenticated users from public routes"
+```
 
-🚀 Deployment
+---
 
-This frontend can be deployed to:
+## Deployment
 
-Vercel
+The frontend is a static Vite build and can be deployed to any static hosting provider.
 
-Netlify
+| Platform | Notes |
+|---|---|
+| [Vercel](https://vercel.com) | Recommended — auto-deploys from GitHub |
+| [Netlify](https://netlify.com) | Supports SPA redirect rules out of the box |
+| [Cloudflare Pages](https://pages.cloudflare.com) | Fast global CDN |
+| [GitHub Pages](https://pages.github.com) | Free, requires base URL config |
 
-GitHub Pages
+Set `VITE_API_URL` in your hosting provider's environment variable settings to point to the production backend.
 
-Cloudflare Pages
+---
 
-Backend URL can be configured via:
+## Contributing
 
-VITE_API_URL
+1. Fork the repo and create a feature branch from `main`
+2. Write clean, modular, well-named code
+3. Keep components small and single-responsibility
+4. Use meaningful commit messages (see above)
+5. Open a Pull Request with a clear description of changes
 
-🤝 Contributing
+> This is a private/internal project. Please coordinate with the team before making significant architectural changes.
 
-Create a feature branch
+---
 
-Write clean, modular code
+## License
 
-Use meaningful commit messages
+**Private — Internal Use Only.**
+Unauthorized distribution or use outside the CodeArc organization is not permitted.
 
-Submit PR for review
+---
 
-📄 License
-
-This project is private (Internal Use).
->>>>>>> 89e19bc (added Readme file)
+<div align="center">
+Built with ❤️ by the CodeArc team
+</div>
