@@ -134,7 +134,7 @@
 
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { User, Layers, Menu, X, Crown } from "lucide-react";
+import { User, Layers, Menu, X, Crown, Lock } from "lucide-react";
 
 const UserNavbar = () => {
   const location = useLocation();
@@ -145,7 +145,7 @@ const UserNavbar = () => {
   const navItems = [
     { path: "/user/profile", label: "Profile", active: true },
     { path: "/user/home", label: "Problems", active: true },
-    { path: "/user/ai-tutor", label: "AI Tutor", active: false },
+    { path: "/user/ai-tutor", label: "AI Tutor", active: true },
     { path: "/user/community", label: "Community", active: false },
     { path: "/user/jobdetails", label: "Jobs", active: true },
     { path: "/user/interview", label: "Interview", active: false },
@@ -169,18 +169,18 @@ const UserNavbar = () => {
                 <Link
                   key={item.path}
                   to={item.active ? item.path : "#"}
-                  className={`transition-colors font-medium pb-1 border-b-2 ${
+                  className={`flex items-center gap-1.5 transition-all duration-200 font-medium pb-1 border-b-2 ${
                     isActive
                       ? "text-white border-blue-500"
                       : item.active
                       ? "text-gray-300 hover:text-white border-transparent hover:border-blue-400/50"
-                      : "text-gray-500 cursor-not-allowed border-transparent"
+                      : "text-gray-500 cursor-not-allowed border-transparent opacity-60 hover:opacity-100"
                   }`}
                   title={item.active ? "" : "Coming Soon"}
                 >
                   {item.label}
                   {!item.active && (
-                    <span className="text-xs text-yellow-500 ml-1">🔒</span>
+                    <Lock className="w-3 h-3 text-slate-500" />
                   )}
                 </Link>
               );
@@ -229,25 +229,25 @@ const UserNavbar = () => {
                     key={item.path}
                     to={item.active ? item.path : "#"}
                     onClick={() => item.active && setIsMenuOpen(false)}
-                    className={`w-full transition-colors font-medium pb-1 border-b-2 ${
+                    className={`w-full flex items-center justify-between transition-colors font-medium pb-1 border-b-2 ${
                       isActive
                         ? "text-white border-blue-500"
                         : item.active
                         ? "text-gray-300 hover:text-white border-transparent hover:border-blue-400/50"
-                        : "text-gray-500 cursor-not-allowed border-transparent"
+                        : "text-gray-500 cursor-not-allowed border-transparent opacity-60"
                     }`}
                     title={item.active ? "" : "Coming Soon"}
                   >
                     <div className="flex items-center">
                       {item.label}
-                      {!item.active && (
-                        <span className="text-xs text-yellow-500 ml-2">🔒</span>
-                      )}
                     </div>
+                    {!item.active && (
+                      <Lock className="w-3.5 h-3.5 text-yellow-500/80" />
+                    )}
                   </Link>
                 );
               })}
-              {/* Mobile Premium Button */}
+              
               <button
                 onClick={() => {
                   setIsModalOpen(true);

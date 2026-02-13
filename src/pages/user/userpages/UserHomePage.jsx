@@ -183,6 +183,7 @@
 
 // // ------------------------------------------------------------------
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Filter,
   ChevronLeft,
@@ -334,7 +335,7 @@ const UserHomePage = () => {
                 <div className="flex-1">
                   <Search
                     value={searchTerm}
-                    onChange={setSearchTerm}
+                    on Change={setSearchTerm}
                     placeholder="Search problems..."
                   />
                 </div>
@@ -697,4 +698,4 @@ const UserHomePage = () => {
   );
 };
 
-export default UserHomePage;
+export default UserHomePage

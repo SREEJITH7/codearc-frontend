@@ -170,9 +170,20 @@ const ResultComponent = ({
       return (
         <div className="p-4 m-4 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
-          <div>
-            <h4 className="text-sm font-semibold text-rose-400">Execution Error</h4>
-            <p className="text-sm text-rose-300/80 mt-1 font-mono">{error}</p>
+          <div className="flex-1">
+            <div className="flex justify-between items-start">
+              <div>
+                <h4 className="text-sm font-semibold text-rose-400">Execution Error</h4>
+                <p className="text-sm text-rose-300/80 mt-1 font-mono">{error}</p>
+              </div>
+              <button
+                onClick={() => onExplainError({ code: userCode, errorLog: error })}
+                className="px-3 py-1.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-semibold rounded-lg border border-rose-500/30 transition-all flex items-center gap-2 group"
+              >
+                <AlertTriangle size={14} className="group-hover:animate-pulse" />
+                Explain with AI
+              </button>
+            </div>
           </div>
         </div>
       );
