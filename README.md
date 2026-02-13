@@ -232,5 +232,5 @@ Unauthorized distribution or use outside the CodeArc organization is not permitt
 ---
 
 <div align="center">
-Built with ❤️ by the CodeArc team
+Built with by the CodeArc team
 </div>
