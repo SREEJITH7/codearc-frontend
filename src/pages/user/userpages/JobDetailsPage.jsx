@@ -347,7 +347,7 @@
 // -------------------------
 import React, { useState, useEffect } from "react";
 import { Briefcase } from "lucide-react";
-import { JobsLoadingSkeleton } from "../../../utils/shimmer/JobCardSkeleton";
+import { JobsLoadingSkeleton, JobGridSkeleton } from "../../../utils/shimmer/JobCardSkeleton";
 import { jobService } from "../../../services/Job/jobService";
 import { Search } from "../../../component/common/Search";
 import { DropdownFilter } from "../../../component/common/DropDownFilter";
@@ -448,13 +448,7 @@ const JobDetailsPage = () => {
   ];
 
   /* ---------------- LOADING ---------------- */
-  if (loading) {
-    return (
-      <UserLayout>
-        <JobsLoadingSkeleton />
-      </UserLayout>
-    );
-  }
+  // Loading is handled inline below to keep filters visible
 
   return (
     <UserLayout>
@@ -515,8 +509,10 @@ const JobDetailsPage = () => {
           </div>
         </div>
 
-        {/* JOB LIST */}
-        {jobs.length === 0 ? (
+        {/* JOB LIST SECTION */}
+        {loading && jobs.length === 0 ? (
+          <JobGridSkeleton count={limit} columns="grid md:grid-cols-2 lg:grid-cols-3 gap-6" />
+        ) : jobs.length === 0 ? (
           <div className="bg-slate-700/30 rounded-lg p-12 text-center">
             <Briefcase className="w-16 h-16 mx-auto mb-4 text-gray-500" />
             <h3 className="text-xl font-semibold text-gray-400">
@@ -524,14 +520,12 @@ const JobDetailsPage = () => {
             </h3>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div className={`grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 transition-all duration-300 ${loading ? "opacity-40 grayscale-[0.5] pointer-events-none" : "opacity-100"}`}>
             {jobs.map((job) => (
               <JobCard
                 key={job._id}
                 job={job}
-
                 onView={() => setSelectedJob(job)}
-
                 onApply={(jobId) =>
                   navigate(`/user/job-apply/${jobId}`)
                 }

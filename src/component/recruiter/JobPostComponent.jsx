@@ -9,15 +9,27 @@ import {
   X,
   Loader2,
   Briefcase,
+  AlertCircle,
 } from "lucide-react";
 import { validateJobPost } from "../../utils/validations/ValidateJobPost";
 import { jobService } from "../../services/Job/jobService";
 
-const JobPostComponent = ({
-  onSubmit,
-  initialData,
-  isEditMode = false,
-}) => {
+const FieldError = ({ message }) => {
+  if (!message) return null;
+  return (
+    <p className="flex items-center gap-1.5 text-red-400 text-xs mt-1.5 animate-in fade-in slide-in-from-top-1">
+      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+      {message}
+    </p>
+  );
+};
+
+const inputBase =
+  "w-full bg-slate-800/50 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 transition-all text-white placeholder:text-slate-500";
+const inputNormal = `${inputBase} border border-slate-600 focus:ring-blue-500/50`;
+const inputError = `${inputBase} border border-red-500/70 focus:ring-red-500/40 bg-red-500/5`;
+
+const JobPostComponent = ({ onSubmit, initialData, isEditMode = false }) => {
   const [formData, setFormData] = useState({
     role: "",
     workTime: "",
@@ -32,16 +44,16 @@ const JobPostComponent = ({
 
   const [newRequirement, setNewRequirement] = useState("");
   const [newResponsibility, setNewResponsibility] = useState("");
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const [locationSuggestions, setLocationSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoadingLocations, setIsLoadingLocations] = useState(false);
   const locationInputRef = useRef(null);
+  const skipLocationFetchRef = useRef(false);
 
   useEffect(() => {
     if (initialData) {
-      console.log("initialdata", initialData);
       setFormData(initialData);
     }
   }, [initialData]);
@@ -49,6 +61,11 @@ const JobPostComponent = ({
   useEffect(() => {
     const fetchLocations = async () => {
       const query = formData.jobLocation.trim();
+
+      if (skipLocationFetchRef.current) {
+        skipLocationFetchRef.current = false;
+        return;
+      }
 
       if (query.length < 3) {
         setLocationSuggestions([]);
@@ -100,18 +117,30 @@ const JobPostComponent = ({
       ...prev,
       [field]: value,
     }));
+    // Clear error for this field
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+    // Also clear salary error if either salary changes
+    if (field === "minSalary" || field === "maxSalary") {
+      if (errors.salary) setErrors((prev) => ({ ...prev, salary: undefined }));
+    }
   };
 
   const handleLocationSelect = (location) => {
     const parts = location.display_name.split(",");
     const cleanLocation = parts.slice(0, 2).join(",").trim();
 
+    skipLocationFetchRef.current = true;
     setFormData((prev) => ({
       ...prev,
       jobLocation: cleanLocation,
     }));
     setShowSuggestions(false);
     setLocationSuggestions([]);
+    if (errors.jobLocation) {
+      setErrors((prev) => ({ ...prev, jobLocation: undefined }));
+    }
   };
 
   const addRequirement = () => {
@@ -121,6 +150,9 @@ const JobPostComponent = ({
         requirements: [...prev.requirements, newRequirement.trim()],
       }));
       setNewRequirement("");
+      if (errors.requirements) {
+        setErrors((prev) => ({ ...prev, requirements: undefined }));
+      }
     }
   };
 
@@ -141,6 +173,9 @@ const JobPostComponent = ({
         ],
       }));
       setNewResponsibility("");
+      if (errors.responsibilities) {
+        setErrors((prev) => ({ ...prev, responsibilities: undefined }));
+      }
     }
   };
 
@@ -156,14 +191,20 @@ const JobPostComponent = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { valid, errors } = validateJobPost(formData);
+    const { valid, errors: validationErrors } = validateJobPost(formData);
 
     if (!valid) {
-      setErrors(errors);
+      setErrors(validationErrors);
+      // Scroll to first error
+      const firstErrorField = Object.keys(validationErrors)[0];
+      const element = document.getElementById(`field-${firstErrorField}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
       return;
     }
 
-    setErrors([]);
+    setErrors({});
     onSubmit(formData);
   };
 
@@ -173,6 +214,9 @@ const JobPostComponent = ({
       action();
     }
   };
+
+  const errorCount = Object.keys(errors).filter(k => errors[k]).length;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -188,16 +232,7 @@ const JobPostComponent = ({
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-12">
-        {errors.length > 0 && (
-          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-400 text-red-300">
-            <ul className="list-disc list-inside space-y-1">
-              {errors.map((err, i) => (
-                <li key={i}>{err}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
+      
         <div className="text-center mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
             <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -210,11 +245,26 @@ const JobPostComponent = ({
           </h1>
         </div>
 
+        {/* Top-level error summary */}
+        {errorCount > 0 && (
+          <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/40 flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
+            <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-red-300 font-medium text-sm">
+                Please fix {errorCount} {errorCount === 1 ? "error" : "errors"} before submitting.
+              </p>
+              <p className="text-red-400/70 text-xs mt-0.5">
+                Fields marked in red below need your attention.
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="bg-gradient-to-br from-slate-700/30 to-slate-600/20 backdrop-blur-md rounded-3xl p-8 border border-slate-600/50 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Job Role */}
-              <div className="space-y-2">
+              <div id="field-role" className="space-y-2">
                 <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
                   <Briefcase className="w-4 h-4 text-blue-400" />
                   Job Position Name
@@ -224,12 +274,13 @@ const JobPostComponent = ({
                   value={formData.role}
                   onChange={(e) => handleInputChange("role", e.target.value)}
                   placeholder="e.g. Senior Full Stack Engineer"
-                  className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white placeholder:text-slate-500"
+                  className={errors.role ? inputError : inputNormal}
                 />
+                <FieldError message={errors.role} />
               </div>
 
               {/* Work Mode */}
-              <div className="space-y-2">
+              <div id="field-workMode" className="space-y-2">
                 <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
                   <Users className="w-4 h-4 text-purple-400" />
                   Work Mode
@@ -237,7 +288,7 @@ const JobPostComponent = ({
                 <select
                   value={formData.workMode}
                   onChange={(e) => handleInputChange("workMode", e.target.value)}
-                  className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white"
+                  className={errors.workMode ? inputError : inputNormal}
                 >
                   <option value="" disabled>Select Work Mode</option>
                   <option value="remote">REMOTE</option>
@@ -245,10 +296,11 @@ const JobPostComponent = ({
                   <option value="hybrid">HYBRID</option>
 
                 </select>
+                <FieldError message={errors.workMode} />
               </div>
 
               {/* Work Time */}
-              <div className="space-y-2">
+              <div id="field-workTime" className="space-y-2">
                 <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
                   <Clock className="w-4 h-4 text-pink-400" />
                   Work Time
@@ -256,17 +308,18 @@ const JobPostComponent = ({
                 <select
                   value={formData.workTime}
                   onChange={(e) => handleInputChange("workTime", e.target.value)}
-                  className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white"
+                  className={errors.workTime ? inputError : inputNormal}
                 >
                   <option value="" disabled>Select Work Time</option>
                   <option value="full-time">Full Time</option>
                   <option value="part-time">Part Time</option>
                   <option value="internship">Internship</option>
                 </select>
+                <FieldError message={errors.workTime} />
               </div>
 
               {/* Location */}
-              <div className="relative space-y-2" ref={locationInputRef}>
+              <div id="field-jobLocation" className="relative space-y-2" ref={locationInputRef}>
                 <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-red-400" />
                   Location
@@ -277,12 +330,13 @@ const JobPostComponent = ({
                     value={formData.jobLocation}
                     onChange={(e) => handleInputChange("jobLocation", e.target.value)}
                     placeholder="Search for a city..."
-                    className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white placeholder:text-slate-500"
+                    className={errors.jobLocation ? inputError : inputNormal}
                   />
                   {isLoadingLocations && (
-                    <Loader2 className="absolute right-3 top-3 w-5 h-5 text-blue-400 animate-spin" />
+                    <Loader2 className="absolute right-3 top-3.5 w-5 h-5 text-blue-400 animate-spin" />
                   )}
                 </div>
+                <FieldError message={errors.jobLocation} />
 
                 {showSuggestions && locationSuggestions.length > 0 && (
                   <div className="absolute z-50 w-full mt-2 bg-slate-800 border border-slate-600 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
@@ -291,7 +345,7 @@ const JobPostComponent = ({
                         key={index}
                         type="button"
                         onClick={() => handleLocationSelect(suggestion)}
-                        className="w-full text-left px-4 py-3 hover:bg-slate-700 transition-colors text-slate-200 border-b border-slate-700 last:border-0"
+                        className="w-full text-left px-4 py-3 hover:bg-slate-700 transition-colors text-slate-200 border-b border-slate-700 last:border-0 text-sm"
                       >
                         {suggestion.display_name}
                       </button>
@@ -301,7 +355,7 @@ const JobPostComponent = ({
               </div>
 
               {/* Experience */}
-              <div className="space-y-2">
+              <div id="field-minExperience" className="space-y-2">
                 <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
                   <Clock className="w-4 h-4 text-green-400" />
                   Minimum Experience (Years)
@@ -312,45 +366,41 @@ const JobPostComponent = ({
                   value={formData.minExperience}
                   onChange={(e) => handleInputChange("minExperience", e.target.value)}
                   placeholder="e.g. 3"
-                  className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white"
+                  className={errors.minExperience ? inputError : inputNormal}
                 />
+                <FieldError message={errors.minExperience} />
               </div>
 
               {/* Salary Range */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-emerald-400" />
-                    Min Salary (LPA)
-                  </label>
+              <div id="field-salary" className="space-y-2">
+                <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-emerald-400" />
+                  Salary Range (LPA)
+                </label>
+                <div className="grid grid-cols-2 gap-4">
                   <input
                     type="number"
                     min="0"
                     value={formData.minSalary}
                     onChange={(e) => handleInputChange("minSalary", e.target.value)}
                     placeholder="Min"
-                    className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white"
+                    className={errors.salary ? inputError : inputNormal}
                   />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-emerald-400" />
-                    Max Salary (LPA)
-                  </label>
                   <input
                     type="number"
                     min="0"
                     value={formData.maxSalary}
                     onChange={(e) => handleInputChange("maxSalary", e.target.value)}
                     placeholder="Max"
-                    className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white"
+                    className={errors.salary ? inputError : inputNormal}
                   />
                 </div>
+                <FieldError message={errors.salary} />
               </div>
             </div>
 
             {/* Requirements Section */}
-            <div className="space-y-4 pt-4">
+            <div id="field-requirements" className="space-y-4 pt-4">
               <label className="text-lg font-semibold text-slate-200 flex items-center gap-2 border-b border-slate-700 pb-2">
                 <Code className="w-5 h-5 text-indigo-400" />
                 Technical Requirements
@@ -362,7 +412,7 @@ const JobPostComponent = ({
                   onChange={(e) => setNewRequirement(e.target.value)}
                   onKeyPress={(e) => handleKeyPress(e, addRequirement)}
                   placeholder="e.g. 3+ years experience in React"
-                  className="flex-1 bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                  className={errors.requirements && formData.requirements.length === 0 ? inputError : inputNormal}
                 />
                 <button
                   type="button"
@@ -372,7 +422,8 @@ const JobPostComponent = ({
                   <Plus className="w-5 h-5" />
                 </button>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <FieldError message={errors.requirements} />
+              <div className="flex flex-wrap gap-2 min-h-[40px]">
                 {formData.requirements.map((req, index) => (
                   <span
                     key={index}
@@ -392,7 +443,7 @@ const JobPostComponent = ({
             </div>
 
             {/* Responsibilities Section */}
-            <div className="space-y-4">
+            <div id="field-responsibilities" className="space-y-4">
               <label className="text-lg font-semibold text-slate-200 flex items-center gap-2 border-b border-slate-700 pb-2">
                 <Users className="w-5 h-5 text-orange-400" />
                 Key Responsibilities
@@ -404,7 +455,7 @@ const JobPostComponent = ({
                   onChange={(e) => setNewResponsibility(e.target.value)}
                   onKeyPress={(e) => handleKeyPress(e, addResponsibility)}
                   placeholder="e.g. Mentoring junior developers"
-                  className="flex-1 bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
+                  className={errors.responsibilities && formData.responsibilities.length === 0 ? inputError : inputNormal}
                 />
                 <button
                   type="button"
@@ -414,7 +465,8 @@ const JobPostComponent = ({
                   <Plus className="w-5 h-5" />
                 </button>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <FieldError message={errors.responsibilities} />
+              <div className="flex flex-wrap gap-2 min-h-[40px]">
                 {formData.responsibilities.map((resp, index) => (
                   <span
                     key={index}
@@ -432,6 +484,9 @@ const JobPostComponent = ({
                 ))}
               </div>
             </div>
+
+            {/* General Errors */}
+            <FieldError message={errors.general} />
 
             {/* Submit Button */}
             <button
