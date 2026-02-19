@@ -17,7 +17,7 @@ export const validateJobPost = (formData) => {
     errors.push("Job location must not exceed 100 characters.");
   }
 
-  const validWorkTimes = ["full-time", "part-time", "contract", "internship"];
+  const validWorkTimes = ["full-time", "part-time", "internship"];
   if (!formData.workTime || !formData.workTime.trim()) {
     errors.push("Work time is required.");
   } else if (!validWorkTimes.includes(formData.workTime.toLowerCase())) {
@@ -90,60 +90,46 @@ export const validateJobPost = (formData) => {
     }
   }
 
-  if (formData.requirements && formData.requirements.length > 0) {
-    formData.requirements.forEach((req, index) => {
-      const trimmedReq = req.trim();
+if (formData.requirements && formData.requirements.length > 0) {
+  const cleanedRequirements = formData.requirements
+    .map((r) => r.trim())
+    .filter((r) => r !== "");
 
-      if (!trimmedReq) {
-        errors.push(
-          `Requirement ${index + 1} is empty. Please remove empty entries.`
-        );
-      } else if (trimmedReq.length < 5) {
-        errors.push(
-          `Requirement ${index + 1} is too short (minimum 5 characters).`
-        );
-      } else if (trimmedReq.length > 200) {
-        errors.push(
-          `Requirement ${index + 1} is too long (maximum 200 characters).`
-        );
-      }
-
-      const sentences = trimmedReq
-        .split(/[.!?]+/)
-        .filter((s) => s.trim());
-
-      sentences.forEach((sentence) => {
-        if (sentence.trim().length > 150) {
-          errors.push(
-            `Requirement ${
-              index + 1
-            } contains a sentence that's too long. Please break it into smaller sentences.`
-          );
-        }
-      });
-
-      const wordCount = trimmedReq.split(/\s+/).length;
-      if (wordCount > 40) {
-        errors.push(
-          `Requirement ${
-            index + 1
-          } is too wordy (maximum 40 words). Please be more concise.`
-        );
-      }
-    });
-
-    const uniqueReqs = new Set(
-      formData.requirements.map((r) => r.trim().toLowerCase())
-    );
-
-    if (uniqueReqs.size < formData.requirements.length) {
-      errors.push("Duplicate requirements found. Please remove duplicates.");
-    }
-
-    if (formData.requirements.length > 20) {
-      errors.push("Maximum 20 requirements allowed.");
-    }
+  if (cleanedRequirements.length === 0) {
+    errors.push("Please add at least one valid requirement.");
   }
+
+  if (cleanedRequirements.length > 20) {
+    errors.push("You can add a maximum of 20 requirements.");
+  }
+
+  const uniqueReqs = new Set(
+    cleanedRequirements.map((r) => r.toLowerCase())
+  );
+
+  if (uniqueReqs.size !== cleanedRequirements.length) {
+    errors.push("Duplicate requirements are not allowed.");
+  }
+
+  cleanedRequirements.forEach((req, index) => {
+    if (req.length < 10) {
+      errors.push(`Requirement ${index + 1} is too short (min 10 characters).`);
+    }
+
+    if (req.length > 150) {
+      errors.push(`Requirement ${index + 1} is too long (max 150 characters).`);
+    }
+
+    const wordCount = req.split(/\s+/).length;
+
+    if (wordCount > 30) {
+      errors.push(
+        `Requirement ${index + 1} should not exceed 30 words.`
+      );
+    }
+  });
+}
+
 
   if (formData.responsibilities && formData.responsibilities.length > 0) {
     formData.responsibilities.forEach((resp, index) => {

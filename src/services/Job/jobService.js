@@ -1,7 +1,7 @@
 import { axiosInstance } from "../../config/axios.config";
 
 export const jobService = {
-    // Post a new job
+
     postJobDetails: async (jobData) => {
         try {
             const response = await axiosInstance.post("/api/recruiter/jobs/", jobData);
@@ -12,7 +12,7 @@ export const jobService = {
         }
     },
 
-    // Update existing job
+    
     updateJobDetails: async (jobId, jobData) => {
         try {
             const response = await axiosInstance.put(`/api/recruiter/jobs/${jobId}/`, jobData);
@@ -23,7 +23,7 @@ export const jobService = {
         }
     },
 
-    // Get all jobs for the recruiter
+    
     getJobs: async () => {
         try {
             const response = await axiosInstance.get("/api/recruiter/jobs/");
@@ -34,7 +34,7 @@ export const jobService = {
         }
     },
 
-    // Get single job details
+    
     getJobById: async (jobId) => {
         try {
             const response = await axiosInstance.get(`/api/recruiter/jobs/${jobId}/`);
@@ -45,7 +45,7 @@ export const jobService = {
         }
     },
 
-    // Fetch location suggestions (using OpenStreetMap Nominatim API)
+    // Fetch location suggestions using OpenStreetMap Nominatim API
     fetchLocationSuggestions: async (query) => {
         try {
             const response = await axiosInstance.get(`/api/recruiter/jobs/locations/?q=${encodeURIComponent(query)}`);
@@ -56,7 +56,7 @@ export const jobService = {
         }
     },
 
-    // View all jobs with pagination, search, and filters
+    
     viewAllJobs: async ({ page = 1, limit = 6, search, status, workmode, worktime }) => {
         try {
             const params = new URLSearchParams();
@@ -75,7 +75,7 @@ export const jobService = {
         }
     },
 
-    // Toggle job status (OPEN/CLOSED)
+    
     toggleJobStatus: async (jobId) => {
         try {
             const response = await axiosInstance.patch(`/api/recruiter/jobs/${jobId}/toggle_status/`);
@@ -86,7 +86,7 @@ export const jobService = {
         }
     },
 
-    // Get all jobs for users (publicly available jobs)
+    
     jobDetails: async ({ page = 1, limit = 6, search, status, workmode, worktime, skills, location }) => {
         try {
             const params = new URLSearchParams();
@@ -107,7 +107,7 @@ export const jobService = {
         }
     },
 
-    // Get single job for job application page
+    
     getSingleJob: async (jobId) => {
         try {
             const response = await axiosInstance.get(`/api/user/jobs/${jobId}/`);

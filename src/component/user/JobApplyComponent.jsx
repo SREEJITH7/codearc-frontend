@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { 
+
   User, 
   Mail, 
   Phone, 
@@ -13,6 +14,7 @@ import {
   ChevronRight,
   ChevronLeft,
   CheckCircle2
+
 } from "lucide-react";
 import { 
   validateStep1, 
@@ -55,7 +57,7 @@ const JobApplyComponent = ({ onSubmitApplication }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
+     
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev };
@@ -106,6 +108,13 @@ const JobApplyComponent = ({ onSubmitApplication }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+     
+    if (step < totalSteps) {
+      nextStep();
+      return;
+    }
+
     const step4Errors = validateStep4(formData);
     if (Object.keys(step4Errors).length > 0) {
       setErrors(step4Errors);
