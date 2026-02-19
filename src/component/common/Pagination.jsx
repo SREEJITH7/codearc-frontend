@@ -1,42 +1,70 @@
-const Pagination = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) => {
-  if (totalPages <= 0) return null;
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  if (totalPages <= 1) return null;
+
+   
+  const getPages = () => {
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1);
+    if (currentPage <= 3) return [1, 2, 3, 4, "...", totalPages];
+    if (currentPage >= totalPages - 2) return [1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages];
+  };
+
+  const pages = getPages();
 
   return (
-    <div className="flex justify-center items-center mt-6 mb-4">
+    <div className="flex items-center justify-center gap-1.5 mt-8 mb-4">
+       
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-base font-medium text-gray-700 disabled:opacity-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-colors duration-150"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium
+          bg-slate-800/70 border border-slate-700/60 text-slate-400
+          hover:text-white hover:border-slate-500 hover:bg-slate-700/80
+          disabled:opacity-30 disabled:cursor-not-allowed
+          transition-all duration-150"
       >
-        Previous
+        <ChevronLeft className="w-4 h-4" />
+        <span className="hidden sm:inline">Prev</span>
       </button>
 
-      <div className="flex mx-4 space-x-1">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            className={`w-8 h-8 flex items-center justify-center rounded-md text-base font-medium transition-colors duration-150 ${
-              currentPage === page
-                ? "bg-black text-white shadow-md"
-                : "text-gray-700 border border-gray-300 hover:bg-gray-100"
-            }`}
-          >
-            {page}
-          </button>
-        ))}
+      
+      <div className="flex items-center gap-1">
+        {pages.map((page, i) =>
+          page === "..." ? (
+            <span key={`ellipsis-${i}`} className="w-9 h-9 flex items-center justify-center text-slate-600 text-sm">
+              ···
+            </span>
+          ) : (
+            <button
+              key={page}
+              onClick={() => onPageChange(page)}
+              className={`w-9 h-9 flex items-center justify-center rounded-xl text-sm font-medium transition-all duration-150
+                ${
+                  currentPage === page
+                    ? "bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 scale-105"
+                    : "text-slate-400 hover:text-white hover:bg-slate-700/80 border border-transparent hover:border-slate-600"
+                }`}
+            >
+              {page}
+            </button>
+          )
+        )}
       </div>
 
+       
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-base font-medium text-gray-700 disabled:opacity-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-colors duration-150"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium
+          bg-slate-800/70 border border-slate-700/60 text-slate-400
+          hover:text-white hover:border-slate-500 hover:bg-slate-700/80
+          disabled:opacity-30 disabled:cursor-not-allowed
+          transition-all duration-150"
       >
-        Next
+        <span className="hidden sm:inline">Next</span>
+        <ChevronRight className="w-4 h-4" />
       </button>
     </div>
   );

@@ -16,15 +16,20 @@ const JobPostPage = () => {
   const getInitialFormData = () => {
     if (!jobToEdit) return undefined;
 
+    const getVal = (key1, key2) => {
+      const val = jobToEdit[key1] !== undefined && jobToEdit[key1] !== null ? jobToEdit[key1] : jobToEdit[key2];
+      return val !== undefined && val !== null ? val : "";
+    };
+
     return {
-      role: jobToEdit.jobrole || "",
-      jobLocation: jobToEdit.jobLocation || "",
-      workTime: jobToEdit.workTime || "",
-      workMode: jobToEdit.workMode || "",
-      minExperience: jobToEdit.minExperience || "",
-      minSalary: jobToEdit.minSalary || "",
-      maxSalary: jobToEdit.maxSalary || "",
-      requirements: jobToEdit.requirements || [],
+      role: getVal("jobrole", "title"),
+      jobLocation: getVal("jobLocation", "location"),
+      workTime: getVal("workTime", "work_time"),
+      workMode: getVal("workMode", "job_type"),
+      minExperience: getVal("minExperience", "experience"),
+      minSalary: getVal("minSalary", "min_salary"),
+      maxSalary: getVal("maxSalary", "max_salary"),
+      requirements: jobToEdit.requirements || jobToEdit.skills || [],
       responsibilities: jobToEdit.responsibilities || [],
     };
   };

@@ -31,6 +31,30 @@ const JobCardSkeleton = () => {
   );
 };
 
+export const JobGridSkeleton = ({ count = 6, columns = "grid md:grid-cols-2 lg:grid-cols-3" }) => {
+  return (
+    <div className={`${columns} gap-6 mb-8`}>
+      {[...Array(count)].map((_, index) => (
+        <div key={index} className="relative overflow-hidden">
+          <JobCardSkeleton />
+          <div
+            className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          ></div>
+        </div>
+      ))}
+      <style>{`
+        @keyframes shimmer {
+          100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+          animation: shimmer 2s infinite;
+        }
+      `}</style>
+    </div>
+  );
+};
+
 export const JobsLoadingSkeleton = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
