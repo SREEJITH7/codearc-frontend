@@ -173,7 +173,6 @@ const JobPostComponent = ({
       action();
     }
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -241,9 +240,10 @@ const JobPostComponent = ({
                   className="w-full bg-slate-800/50 border border-slate-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white"
                 >
                   <option value="" disabled>Select Work Mode</option>
-                  <option value="remote">Remote</option>
-                  <option value="on-site">Onsite</option>
-                  <option value="hybrid">Hybrid</option>
+                  <option value="remote">REMOTE</option>
+                  <option value="on-site">ONSITE</option>
+                  <option value="hybrid">HYBRID</option>
+
                 </select>
               </div>
 
@@ -261,7 +261,6 @@ const JobPostComponent = ({
                   <option value="" disabled>Select Work Time</option>
                   <option value="full-time">Full Time</option>
                   <option value="part-time">Part Time</option>
-                  <option value="contract">Contract</option>
                   <option value="internship">Internship</option>
                 </select>
               </div>

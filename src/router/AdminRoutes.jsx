@@ -38,6 +38,7 @@ import AdminLogin from "../pages/admin/auth/AdminLogin";
 import { AdminDashboardPage } from "../pages/admin/adminPages/DashBoardPage";
 import UsersListPage from "../pages/admin/adminpages/UsersListPage";
 import { RecruiterListPage } from "../pages/admin/adminpages/RecruiterListPage";
+import ApplicantsListPage from "../pages/admin/adminpages/ApplicantsListPage";
 
 import { ProblemsListPage } from "../pages/admin/adminpages/ProblemsListPage";
 import ProblemAddingPage from "../pages/admin/adminpages/ProblemAddingPage";
@@ -55,8 +56,9 @@ const AdminRoutes = () => {
 
       {/* PRIVATE ADMIN ROUTES */}
       <Route element={<AdminPrivateRoutes />}>
-        <Route path="dashboard" element={<AdminDashboardPage />} /> {/* Changed from /admin/dashboard to dashboard */}
+        <Route path="dashboard" element={<AdminDashboardPage />} /> 
         <Route path="users" element={<UsersListPage />} />
+        <Route path="applicants" element={<ApplicantsListPage />} />
         <Route path="recruiter" element={<RecruiterListPage />} />
         <Route path="problems" element={<ProblemsListPage />} />
         <Route path="addproblems" element={<ProblemAddingPage/>} />

@@ -24,15 +24,15 @@ const fetchCategories = async () => {
 
     let categoryList = [];
 
-    // ✅ DRF paginated response (CURRENT BACKEND)
+     
     if (response?.results?.categories && Array.isArray(response.results.categories)) {
       categoryList = response.results.categories;
     }
-    // ✅ Handle { data: { categories: [] } } structure
+     
     else if (response?.data?.categories && Array.isArray(response.data.categories)) {
       categoryList = response.data.categories;
     }
-    // ✅ Non-paginated fallback (optional)
+     
     else if (Array.isArray(response?.data)) {
       categoryList = response.data;
     }
@@ -414,11 +414,11 @@ const fetchCategories = async () => {
         </ul>
       </div>
 
-      {/* Function Signature */}
+       
       <div className="bg-slate-800 p-6 rounded-lg">
         <h2 className="text-xl font-semibold mb-4 text-white">Function Signature</h2>
         
-        {/* Function Name */}
+         
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Function Name
@@ -432,7 +432,7 @@ const fetchCategories = async () => {
           />
         </div>
 
-        {/* Parameters */}
+         
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
             <label className="block text-sm font-medium text-gray-300">
@@ -473,7 +473,7 @@ const fetchCategories = async () => {
           ))}
         </div>
 
-        {/* Return Type */}
+        
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Return Type

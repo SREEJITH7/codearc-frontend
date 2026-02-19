@@ -29,24 +29,28 @@ const JobPostPage = () => {
     };
   };
 
-  const transformFormDataToJobPost = (formData) => {
-    // Backend expects uppercase choices: REMOTE, ONSITE, HYBRID
-    const mappedJobType = formData.workMode === "on-site" ? "ONSITE" : formData.workMode.toUpperCase();
-    
-    return {
-      title: formData.role,
-      description: "No description provided", // Or use a field if added to form
-      location: formData.jobLocation,
-      job_type: mappedJobType,
-      skills: formData.requirements,
-      experience: parseInt(formData.minExperience) || 0,
-      responsibilities: formData.responsibilities,
-      workTime: formData.workTime,
-      minSalary: parseInt(formData.minSalary) || 0,
-      maxSalary: parseInt(formData.maxSalary) || 0,
-      status: "OPEN",
-    };
+const transformFormDataToJobPost = (formData) => {
+  const modeMapping = {
+    remote: "REMOTE",
+    "on-site": "ONSITE",
+    hybrid: "HYBRID",
   };
+
+  return {
+    title: formData.role,
+    description: "No description provided",
+    location: formData.jobLocation,
+    job_type: modeMapping[formData.workMode] || formData.workMode.toUpperCase(),
+    work_time: formData.workTime,
+    experience: parseInt(formData.minExperience) || 0,
+    min_salary: parseInt(formData.minSalary) || 0,
+    max_salary: parseInt(formData.maxSalary) || 0,
+    skills: formData.requirements,
+    responsibilities: formData.responsibilities,
+    status: "OPEN",
+  };
+};
+
 
   const submitJobDetails = async (jobData) => {
     setIsSubmitting(true);
@@ -55,7 +59,7 @@ const JobPostPage = () => {
     try {
       const jobPostData = transformFormDataToJobPost(jobData);
       console.log("Job Details to be sent:", jobPostData);
-
+      console.log("Payload being sent:", JSON.stringify(jobPostData, null, 2));
       let response;
 
       if (jobToEdit?._id) {
@@ -82,10 +86,11 @@ const JobPostPage = () => {
 
       setTimeout(() => {
         setSubmitStatus(null);
-        navigate("/recruiter/portal");
+        navigate("/recruiter/viewallpost");
       }, 1000);
     } catch (error) {
       console.error("Error submitting job:", error);
+      console.error("Response data:", error?.response?.data);
 
       let errorMessage = jobToEdit
         ? "Failed to update job. Please try again."
@@ -127,7 +132,7 @@ const JobPostPage = () => {
         </div>
       )}
 
-      {/* Modal or notification can be handled here */}
+       
 
       <JobPostComponent
         onSubmit={submitJobDetails}
