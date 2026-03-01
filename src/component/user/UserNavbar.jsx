@@ -135,6 +135,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { User, Layers, Menu, X, Crown, Lock } from "lucide-react";
+import { SubscriptionModal } from "./SubscriptionModal";
 
 const UserNavbar = () => {
   const location = useLocation();
@@ -146,9 +147,9 @@ const UserNavbar = () => {
     { path: "/user/profile", label: "Profile", active: true },
     { path: "/user/home", label: "Problems", active: true },
     { path: "/user/ai-tutor", label: "AI Tutor", active: true },
-    { path: "/user/community", label: "Community", active: false },
+    // { path: "/user/community", label: "Community", active: false },
     { path: "/user/jobdetails", label: "Jobs", active: true },
-    { path: "/user/interview", label: "Interview", active: false },
+    // { path: "/user/interview", label: "Interview", active: false },
   ];
 
   return (
@@ -262,6 +263,7 @@ const UserNavbar = () => {
           </div>
         )}
       </div>
+      <SubscriptionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );
 };

@@ -414,6 +414,7 @@ const JobPostComponent = ({ onSubmit, initialData, isEditMode = false }) => {
                   placeholder="e.g. 3+ years experience in React"
                   className={errors.requirements && formData.requirements.length === 0 ? inputError : inputNormal}
                 />
+                <FieldError message={errors.requirements} />
                 <button
                   type="button"
                   onClick={addRequirement}
@@ -422,7 +423,7 @@ const JobPostComponent = ({ onSubmit, initialData, isEditMode = false }) => {
                   <Plus className="w-5 h-5" />
                 </button>
               </div>
-              <FieldError message={errors.requirements} />
+              
               <div className="flex flex-wrap gap-2 min-h-[40px]">
                 {formData.requirements.map((req, index) => (
                   <span

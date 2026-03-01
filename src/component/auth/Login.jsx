@@ -122,33 +122,33 @@ const GITHUB_URL = "http://localhost:8000/api/auth/github/login/ ";
     const allowedOrigins = ["http://localhost:5173", "http://localhost:8000"];
 
     const handler = (event) => {
-      console.log("📩 MESSAGE RECEIVED:", event);
+      // 1. Only process our specific auth success message
+      if (event.data?.type !== "GOOGLE_AUTH_SUCCESS") return;
 
+      // 2. Now check if the origin is trusted
       if (!allowedOrigins.includes(event.origin)) {
-        console.warn("❌ Ignored unknown origin:", event.origin);
+        console.warn("❌ Ignored unknown origin for Auth:", event.origin);
         return;
       }
 
-      if (event.data.type === "GOOGLE_AUTH_SUCCESS") {
-        console.log("🎉 SUCCESS MESSAGE RECEIVED:", event.data);
+      console.log("🎉 SUCCESS MESSAGE RECEIVED:", event.data);
 
-        const payload = event.data.payload;
+      const payload = event.data.payload;
 
-        Cookies.set("access_token", payload.access_token);
-        Cookies.set("refresh_token", payload.refresh_token);
+      Cookies.set("access_token", payload.access_token);
+      Cookies.set("refresh_token", payload.refresh_token);
 
-        dispatch(
-          setUser({
-            email: payload.email,
-            username: payload.name,
-            role: role,
-          })
-        );
+      dispatch(
+        setUser({
+          email: payload.email,
+          username: payload.name,
+          role: role,
+        })
+      );
 
-        toast.success("Google Login Success!");
-        navigate("/user/home");
-        //  navigate(`/${role}/home`);
-      }
+      toast.success("Google Login Success!");
+      navigate("/user/home");
+      //  navigate(`/${role}/home`);
     };
 
     window.addEventListener("message", handler);

@@ -16,10 +16,12 @@ import SingleProblemPage from "../pages/user/userpages/SingleProblemPage";
 import JobDetailsPage from "../pages/user/userpages/JobDetailsPage";
 import JobApplyPage from "../pages/user/userpages/JobApplyPage";
 import UserApplicationPage from "../pages/user/userpages/UserApplicationPage";
+import ApplicationTrackingPage from "../pages/user/userpages/ApplicationTrackingPage";
 
 import AiChatPage from "../component/ai/AiChatPage";
+import SubscriptionPage from "../pages/SubscriptionPage";
 
-
+ 
 export default function UserRoutes() {
   return (
     <Routes>
@@ -44,7 +46,9 @@ export default function UserRoutes() {
         <Route path="user/jobdetails" element={<JobDetailsPage/>} />
         <Route path="user/job-apply/:jobId" element={<JobApplyPage />} />
         <Route path="user/applications/:jobId" element={<UserApplicationPage />} />
+        <Route path="user/application-tracking/:jobId" element={<ApplicationTrackingPage />} />
         <Route path="user/ai-tutor" element={<AiChatPage />} />
+        <Route path="user/subscription" element={<SubscriptionPage />} />
       </Route>
     </Routes>
   );
