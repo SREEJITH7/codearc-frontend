@@ -1,16 +1,13 @@
-/**
- * Transform backend problem data (snake_case) to frontend format (camelCase)
- * Used when editing a problem
- */
+
 export const transformProblemForEdit = (backendProblem) => {
   if (!backendProblem) return null;
 
-  // Handle constraints - can be string or array
+   
   let constraintsArray = [];
   if (Array.isArray(backendProblem.constraints)) {
     constraintsArray = backendProblem.constraints;
   } else if (typeof backendProblem.constraints === 'string' && backendProblem.constraints) {
-    // Split by newlines or commas
+     
     constraintsArray = backendProblem.constraints
       .split(/\n|,/)
       .map(c => c.trim())
@@ -33,7 +30,7 @@ export const transformProblemForEdit = (backendProblem) => {
       : [{ input: "", output: "", explanation: "" }],
     hints: Array.isArray(backendProblem.hints) ? backendProblem.hints : [],
     
-    // Function signature fields
+     
     functionName: backendProblem.function_name || "",
     parameters: Array.isArray(backendProblem.parameters) && backendProblem.parameters.length > 0
       ? backendProblem.parameters
@@ -53,6 +50,7 @@ export const transformProblemForEdit = (backendProblem) => {
     solution: backendProblem.solution || "",
     
     // Test cases - transform from backend format with safety checks
+    
     testCases: Array.isArray(backendProblem.testcases) && backendProblem.testcases.length > 0
       ? backendProblem.testcases.map((tc) => ({
           input: Array.isArray(tc.input) 

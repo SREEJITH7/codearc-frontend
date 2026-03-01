@@ -1,7 +1,7 @@
 export const validateProblem = (data) => {
   const errors = [];
 
-  // ---------- BASIC INFO ----------
+ 
   if (!data.title || !data.title.trim()) {
     errors.push("Title is required");
   }
@@ -44,7 +44,7 @@ export const validateProblem = (data) => {
   const isFilled = (val) => {
     if (val === null || val === undefined) return false;
     if (typeof val === "string") return val.trim().length > 0;
-    return true; // Numbers, arrays, etc. are considered filled if they exist
+    return true;  
   };
 
   // ---------- EXAMPLES ----------
@@ -68,7 +68,7 @@ export const validateProblem = (data) => {
     errors.push("At least one complete test case is required");
   }
 
-  // Only check mismatch if parameters exist
+   
   if (validParameters.length > 0) {
     const mismatched = data.testCases?.some(
       (tc) => tc.input?.length !== validParameters.length

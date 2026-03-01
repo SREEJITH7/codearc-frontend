@@ -78,7 +78,7 @@ const SingleProblemPage = () => {
   const handleExplainError = async ({ code, errorLog, problemStatement }) => {
     const prompt = `I'm working on the problem: "${problemData?.title}".\n\nMy code:\n\`\`\`${language}\n${code}\n\`\`\`\n\nI'm getting this error/output:\n\`\`\`\n${errorLog}\n\`\`\`\n\nCan you explain what's wrong and guide me towards a solution?`;
     
-    navigate("/ai-tutor", { state: { initialPrompt: prompt } });
+    navigate("/user/ai-tutor", { state: { initialPrompt: prompt } });
   }
 
   const handleRunCode = async (code, problemId, language) => {
