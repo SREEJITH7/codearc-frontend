@@ -26,48 +26,50 @@
 // };
 
 // export default AdminRoutes;
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AdminPrivateRoutes } from "./PrivateRoutes";
 import { AdminPublicRoutes } from "./PublicRoutes";
+import LoadingFallback from "../component/common/LoadingFallback";
 
 // AUTH
-import AdminLogin from "../pages/admin/auth/AdminLogin";
+const AdminLogin = lazy(() => import("../pages/admin/auth/AdminLogin"));
 
 // DASHBOARD
-import { AdminDashboardPage } from "../pages/admin/adminPages/DashBoardPage";
-import UsersListPage from "../pages/admin/adminpages/UsersListPage";
-import { RecruiterListPage } from "../pages/admin/adminpages/RecruiterListPage";
-import ApplicantsListPage from "../pages/admin/adminpages/ApplicantsListPage";
-
-import { ProblemsListPage } from "../pages/admin/adminpages/ProblemsListPage";
-import ProblemAddingPage from "../pages/admin/adminpages/ProblemAddingPage";
-import ProblemEditPage from "../pages/admin/adminpages/ProblemEditPage";
-import { CategoriesListPage } from "../pages/admin/adminpages/CategoriesListPage";
-import CategoryAddingPage from "../pages/admin/adminpages/CategoryAddingPage";
+const AdminDashboardPage = lazy(() => import("../pages/admin/adminPages/DashBoardPage").then(m => ({ default: m.AdminDashboardPage })));
+const UsersListPage = lazy(() => import("../pages/admin/adminpages/UsersListPage"));
+const RecruiterListPage = lazy(() => import("../pages/admin/adminpages/RecruiterListPage").then(m => ({ default: m.RecruiterListPage })));
+const ApplicantsListPage = lazy(() => import("../pages/admin/adminpages/ApplicantsListPage"));
+const ProblemsListPage = lazy(() => import("../pages/admin/adminpages/ProblemsListPage").then(m => ({ default: m.ProblemsListPage })));
+const ProblemAddingPage = lazy(() => import("../pages/admin/adminpages/ProblemAddingPage"));
+const ProblemEditPage = lazy(() => import("../pages/admin/adminpages/ProblemEditPage"));
+const CategoriesListPage = lazy(() => import("../pages/admin/adminpages/CategoriesListPage").then(m => ({ default: m.CategoriesListPage })));
+const CategoryAddingPage = lazy(() => import("../pages/admin/adminpages/CategoryAddingPage"));
 
 const AdminRoutes = () => {
   return (
-    <Routes>
-      {/* PUBLIC AUTH ROUTES */}
-      <Route element={<AdminPublicRoutes />}>
-        <Route path="login" element={<AdminLogin />} /> {/* Changed from /admin/login to login */}
-      </Route>
+    <Suspense fallback={<LoadingFallback />}>
+      <Routes>
+        {/* PUBLIC AUTH ROUTES */}
+        <Route element={<AdminPublicRoutes />}>
+          <Route path="login" element={<AdminLogin />} /> {/* Changed from /admin/login to login */}
+        </Route>
 
-      {/* PRIVATE ADMIN ROUTES */}
-      <Route element={<AdminPrivateRoutes />}>
-        <Route path="dashboard" element={<AdminDashboardPage />} /> 
-        <Route path="users" element={<UsersListPage />} />
-        <Route path="applicants" element={<ApplicantsListPage />} />
-        <Route path="recruiter" element={<RecruiterListPage />} />
-        <Route path="problems" element={<ProblemsListPage />} />
-        <Route path="addproblems" element={<ProblemAddingPage/>} />
-        <Route path="problems/edit/:problemId" element={<ProblemEditPage/>} />
-        <Route path="problemcategory" element={<CategoriesListPage/>}/>
-        <Route path="addproblemcategory" element={<CategoryAddingPage/>} />
-        <Route path="problemcategory/edit/:id" element={<CategoryAddingPage />} />
-      </Route>
-    </Routes>
+        {/* PRIVATE ADMIN ROUTES */}
+        <Route element={<AdminPrivateRoutes />}>
+          <Route path="dashboard" element={<AdminDashboardPage />} /> 
+          <Route path="users" element={<UsersListPage />} />
+          <Route path="applicants" element={<ApplicantsListPage />} />
+          <Route path="recruiter" element={<RecruiterListPage />} />
+          <Route path="problems" element={<ProblemsListPage />} />
+          <Route path="addproblems" element={<ProblemAddingPage/>} />
+          <Route path="problems/edit/:problemId" element={<ProblemEditPage/>} />
+          <Route path="problemcategory" element={<CategoriesListPage/>}/>
+          <Route path="addproblemcategory" element={<CategoryAddingPage/>} />
+          <Route path="problemcategory/edit/:id" element={<CategoryAddingPage />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import {
   Code2,
   TrendingUp,
@@ -7,7 +7,8 @@ import {
   FileText,
   History,
 } from "lucide-react";
-import SubmissionHistoryComponent from "./SubmissionHistoryComponent";
+
+const SubmissionHistoryComponent = lazy(() => import("./SubmissionHistoryComponent"));
 
 const ProblemDetailsComponent = ({
   problemData,
@@ -207,7 +208,9 @@ const ProblemDetailsComponent = ({
           </div>
         ) : (
           <div className="p-8">
-            <SubmissionHistoryComponent problemId={problemId} />
+            <Suspense fallback={<div className="flex justify-center p-8 animate-pulse text-slate-400">Loading history...</div>}>
+              <SubmissionHistoryComponent problemId={problemId} />
+            </Suspense>
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Layers, User, Menu, X } from "lucide-react";
+import { Layers, User, Menu, X, Crown } from "lucide-react";
 
 const RecruiterNavbar = () => {
   const location = useLocation();
@@ -42,6 +42,19 @@ const RecruiterNavbar = () => {
               {item.label}
             </Link>
           ))}
+
+          {/* 🔥 Subscription Button */}
+          <Link
+            to="/recruiter/subscription"
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
+              isActive("/recruiter/subscription")
+                ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg"
+                : "bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/40 hover:text-white"
+            }`}
+          >
+            <Crown className="w-4 h-4" />
+            Subscription
+          </Link>
         </nav>
 
         {/* RIGHT ACTIONS */}
@@ -55,7 +68,11 @@ const RecruiterNavbar = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden text-gray-300 hover:text-white transition-colors"
           >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
       </div>
@@ -78,6 +95,16 @@ const RecruiterNavbar = () => {
                 {item.label}
               </Link>
             ))}
+
+            {/* 🔥 Mobile Subscription Button */}
+            <Link
+              to="/recruiter/subscription"
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/40 hover:text-white font-semibold transition-all"
+            >
+              <Crown className="w-4 h-4" />
+              Subscription
+            </Link>
           </nav>
         </div>
       )}

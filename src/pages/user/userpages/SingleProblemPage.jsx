@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, lazy, Suspense } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import CompilerComponent from "../../../component/user/CompilerComponent"
 import ProblemDetailsComponent from "../../../component/user/ProblemDetailsComponent"
@@ -6,7 +6,8 @@ import ResultComponent from "../../../component/user/ResultComponent"
 import UserLayout from "../../../layouts/UserLayout"
 import { problemService } from "../../../services/problem/problemService"
 import ShimmerSkeleton from "../../../utils/shimmer/ProblemShimmer"
-import { SubscriptionModal } from "../../../component/user/SubscriptionModal"
+
+const SubscriptionModal = lazy(() => import("../../../component/user/SubscriptionModal"))
 
 const SingleProblemPage = () => {
   const { problemId } = useParams()
@@ -279,7 +280,9 @@ const SingleProblemPage = () => {
         </div>
       </div>
 
-      <SubscriptionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <Suspense fallback={null}>
+        <SubscriptionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      </Suspense>
     </UserLayout>
   )
 }

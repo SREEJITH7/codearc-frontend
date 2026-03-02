@@ -233,7 +233,8 @@ import {
   Calendar,
   Zap
 } from "lucide-react";
-import Editor from "@monaco-editor/react";
+import LazyEditor from "../common/LazyEditor";
+
 import { problemService } from "../../services/problem/problemService";
 
 const SubmissionHistoryComponent = ({ problemId }) => {
@@ -439,7 +440,7 @@ const SubmissionHistoryComponent = ({ problemId }) => {
                 </span>
               </div>
               <div className="h-[400px] sm:h-[500px]">
-                <Editor
+                <LazyEditor
                   height="100%"
                   language={sub.language}
                   value={sub.code}

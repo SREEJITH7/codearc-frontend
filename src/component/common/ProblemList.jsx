@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import Table from "../common/Table";
 import { problemService } from "../../service/problemService";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Play, Trophy } from "lucide-react";
 import { aiAuthService } from "../../service/AiService";
-import { SubscriptionModal } from "./SubscriptionModal";
+
+const SubscriptionModal = lazy(() => import("../user/SubscriptionModal"));
 
 const ProblemList = ({ searchTerm, statusFilter }) => {
   const [problems, setProblems] = useState([]);
@@ -181,7 +182,9 @@ const ProblemList = ({ searchTerm, statusFilter }) => {
         )}
 
         {isModalOpen && (
-          <SubscriptionModal isOpen={true} onClose={() => setIsModalOpen(false)} />
+          <Suspense fallback={null}>
+            <SubscriptionModal isOpen={true} onClose={() => setIsModalOpen(false)} />
+          </Suspense>
         )}
       </div>
     </div>
