@@ -1,8 +1,5 @@
-
-import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import React, { useState, lazy, Suspense } from 'react';
+import LazyMarkdown from '../common/LazyMarkdown';
 import remarkGfm from 'remark-gfm';
 import { Copy, Check, Zap } from 'lucide-react';
 
@@ -62,7 +59,8 @@ const AiMessageBubble = ({ role, content }) => {
             prose-li:text-base prose-li:my-1
             prose-ul:my-3 prose-ol:my-3
             prose-ul:ml-5 prose-ol:ml-5">
-            <ReactMarkdown
+            <LazyMarkdown
+              content={content}
               remarkPlugins={[remarkGfm]}
               components={{
                 code({ node, inline, className, children, ...props }) {
@@ -84,21 +82,12 @@ const AiMessageBubble = ({ role, content }) => {
                         </div>
                         <CopyButton code={codeStr}/>
                       </div>
-                      <SyntaxHighlighter
-                        style={oneDark}
-                        language={match[1]}
-                        PreTag="div"
-                        customStyle={{
-                          margin: 0,
-                          padding: '1.25rem 1.5rem',
-                          fontSize: '15px',
-                          lineHeight: '1.7',
-                          backgroundColor: '#060b14',
+                      <LazyMarkdown
+                        content={`\`\`\`${match[1]}\n${codeStr}\n\`\`\``}
+                        components={{
+                          pre: ({ children }) => <div className="m-0 p-5 bg-[#060b14] text-[15px] leading-relaxed">{children}</div>
                         }}
-                        {...props}
-                      >
-                        {codeStr}
-                      </SyntaxHighlighter>
+                      />
                     </div>
                   ) : (
                     <code className="bg-cyan-500/10 border border-cyan-500/20 text-cyan-300
@@ -132,9 +121,7 @@ const AiMessageBubble = ({ role, content }) => {
                   <td className="px-4 py-2.5 border border-slate-700/50 text-slate-400 text-sm">{children}</td>
                 ),
               }}
-            >
-              {content}
-            </ReactMarkdown>
+            />
           </div>
         )}
       </div>

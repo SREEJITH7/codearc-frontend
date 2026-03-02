@@ -14,7 +14,7 @@ import {
   UploadCloud,
   Check,
 } from "lucide-react";
-import Editor from "@monaco-editor/react";
+import LazyEditor from "../common/LazyEditor";
 
 const CompilerComponent = ({
   problemData,
@@ -194,7 +194,7 @@ const CompilerComponent = ({
 
       {/* EDITOR */}
       <div className="flex-1 overflow-hidden">
-        <Editor
+        <LazyEditor
           height="100%"
           language={language}
           value={code}

@@ -4,7 +4,7 @@ import { subscriptionService } from "../../services/subscriptionService";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
-export const SubscriptionModal = ({ isOpen, onClose }) => {
+const SubscriptionModal = ({ isOpen, onClose }) => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -398,3 +398,5 @@ export const SubscriptionModal = ({ isOpen, onClose }) => {
     </div>
   );
 };
+
+export default SubscriptionModal;

@@ -21,9 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { aiService } from "../../services/AiService";
 import { toast } from "react-toastify";
 import UserLayout from "../../layouts/UserLayout";
-import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import LazyMarkdown from "../../component/common/LazyMarkdown";
 import AiSidebar from "./AiSidebar";
 
 const AiChatPage = () => {
@@ -346,43 +344,9 @@ const AiChatPage = () => {
                             : "bg-indigo-600 text-white rounded-tr-none shadow-lg shadow-indigo-600/10"
                         }`}
                       >
-                        <ReactMarkdown
-                          components={{
-                            code({ node, inline, className, children, ...props }) {
-                              const match = /language-(\w+)/.exec(className || "");
-                              return !inline && match ? (
-                                <div className="relative mt-4 mb-2 group/code">
-                                  <div className="absolute right-3 top-3 z-20 opacity-0 group-hover/code:opacity-100 transition-opacity">
-                                    <button
-                                      onClick={() => handleCopy(String(children))}
-                                      className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white border border-slate-700 transition-colors"
-                                    >
-                                      <Copy size={14} />
-                                    </button>
-                                  </div>
-                                  <SyntaxHighlighter
-                                    style={atomDark}
-                                    language={match[1]}
-                                    PreTag="div"
-                                    className="rounded-xl border border-slate-800/80 !bg-slate-950/80 !p-6"
-                                    {...props}
-                                  >
-                                    {String(children).replace(/\n$/, "")}
-                                  </SyntaxHighlighter>
-                                </div>
-                              ) : (
-                                <code
-                                  className={`${className} bg-slate-800/50 px-1.5 py-0.5 rounded text-cyan-400 font-mono`}
-                                  {...props}
-                                >
-                                  {children}
-                                </code>
-                              );
-                            },
-                          }}
-                        >
-                          {msg.content}
-                        </ReactMarkdown>
+                        <LazyMarkdown
+                          content={msg.content}
+                        />
                       </div>
 
                       {msg.role === "assistant" && (

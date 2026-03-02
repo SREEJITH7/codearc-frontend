@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import Table from "../common/Table";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Play, Trophy, CheckCircle2, Circle, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
-// import { aiAuthService } from "../../service/AiService";
-// import { SubscriptionModal } from "./SubscriptionModal";
+
+const SubscriptionModal = lazy(() => import("./SubscriptionModal"));
 
 import { problemService } from "../../services/problem/problemService";
 
@@ -386,10 +386,12 @@ const ProblemList = ({
 
       {/* Subscription Modal */}
       {isModalOpen && (
-        <SubscriptionModal
-          isOpen={true}
-          onClose={() => setIsModalOpen(false)}
-        />
+        <Suspense fallback={null}>
+          <SubscriptionModal
+            isOpen={true}
+            onClose={() => setIsModalOpen(false)}
+          />
+        </Suspense>
       )}
     </div>
   );

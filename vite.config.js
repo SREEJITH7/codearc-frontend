@@ -5,14 +5,30 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  server : {
+  server: {
     port: 5173,
   },
-  
   plugins: [
     tailwindcss(),
     react()
-  ]
-  
+  ],
+  build: {
+    target: 'esnext',
+    minify: 'terser',
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react')) return 'vendor-react';
+            if (id.includes('lucide-react')) return 'vendor-lucide';
+            if (id.includes('react-syntax-highlighter')) return 'vendor-highlighter';
+            if (id.includes('@monaco-editor')) return 'vendor-monaco';
+            return 'vendor';
+          }
+        }
+      }
+    }
+  }
 })
 
