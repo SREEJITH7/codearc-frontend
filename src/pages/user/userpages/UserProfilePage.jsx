@@ -86,22 +86,8 @@ const UserProfilePage = () => {
     (completedCount / profileChecks.length) * 100
   );
 
-  // const handleLogout = async () => {
-  //   try {
-  //     const res = await userAuthService.logout();
 
-  //     if (res.success) {
-  //       dispatch(clearUser());
-  //       toast.success(res.message);
-  //       navigate("/user/login", { replace: true });
-  //     } else {
-  //       toast.error(res.message || "Logout failed");
-  //     }
-  //   } catch (err) {
-  //     console.error("Logout error:", err);
-  //     toast.error("Something went wrong during logout");
-  //   }
-  // };
+
   const handleLogout = async () => {
   try {
     const result = await dispatch(logoutThunk("user")).unwrap();
@@ -489,3 +475,251 @@ const StatBlock = ({ title, value, color }) => {
     </div>
   );
 };
+
+
+
+// ----------------------------------
+
+// import React, { useEffect, useState } from "react";
+// import { useNavigate, useLocation } from "react-router-dom";
+// import { toast } from "react-toastify";
+// import {
+//   BarChart3,
+//   Clock,
+//   Settings,
+//   Crown,
+//   Mail,
+//   Calendar,
+//   Award,
+//   UserRound,
+// } from "lucide-react";
+
+// import UserLayout from "../../../layouts/UserLayout";
+// import { userAuthService } from "../../../services/userAuth";
+// import ProfileEditModal from "../../../component/user/ProfileEditModal";
+// import { useDispatch } from "react-redux";
+// import { logoutThunk } from "../../../store/authThunks";
+
+// const UserProfilePage = () => {
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+//   const location = useLocation();
+
+//   /* -------------------- STATE -------------------- */
+
+//   const [profileLoading, setProfileLoading] = useState(true);
+//   const [statsLoading, setStatsLoading] = useState(true);
+
+//   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+//   const [userInfo, setUserInfo] = useState({});
+//   const [userStats, setUserStats] = useState(null);
+
+//   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+//   const [profileModalMode, setProfileModalMode] = useState("edit");
+
+//   /* -------------------- FETCH PROFILE & STATS (PARALLEL) -------------------- */
+
+//   useEffect(() => {
+//     const loadProfile = async () => {
+//       try {
+//         const res = await userAuthService.getUserProfile();
+//         setUserInfo(res.data);
+//       } catch (err) {
+//         toast.error("Failed to load profile");
+//       } finally {
+//         setProfileLoading(false);
+//       }
+//     };
+
+//     const loadStats = async () => {
+//       try {
+//         const res = await userAuthService.getUserStats();
+//         setUserStats(res.data);
+//       } catch (err) {
+//         toast.error("Failed to load stats");
+//       } finally {
+//         setStatsLoading(false);
+//       }
+//     };
+
+//     loadProfile(); // 🔥 Starts immediately
+//     loadStats();   // 🔥 Starts immediately
+//   }, []);
+
+//   /* -------------------- LOGOUT -------------------- */
+
+//   const handleLogout = async () => {
+//     try {
+//       const result = await dispatch(logoutThunk("user")).unwrap();
+//       toast.success(result.message || "Logged out successfully");
+//       navigate("/user/login", { replace: true });
+//     } catch (err) {
+//       toast.error("Logout failed");
+//     }
+//   };
+
+//   /* -------------------- SUBSCRIPTION POPUP -------------------- */
+
+//   useEffect(() => {
+//     let timer;
+
+//     if (location.state?.showSubscriptionSuccess) {
+//       setShowSuccessPopup(true);
+//       timer = setTimeout(() => setShowSuccessPopup(false), 4000);
+//       window.history.replaceState({}, document.title);
+//     }
+
+//     return () => clearTimeout(timer);
+//   }, [location]);
+
+//   /* -------------------- PROFILE COMPLETION -------------------- */
+
+//   const hasBasicInfo = Boolean(
+//     userInfo.display_name?.trim() || userInfo.username?.trim()
+//   );
+//   const hasProfileImage = Boolean(userInfo.profileImage);
+//   const hasResume = Boolean(userInfo.resume);
+//   const hasSkills = Array.isArray(userInfo.skills) && userInfo.skills.length > 0;
+//   const hasBio = Boolean(userInfo.bio?.trim());
+
+//   const checks = [
+//     hasBasicInfo,
+//     hasProfileImage,
+//     hasResume,
+//     hasSkills,
+//     hasBio,
+//   ];
+
+//   const completionPercent = Math.round(
+//     (checks.filter(Boolean).length / checks.length) * 100
+//   );
+
+//   /* -------------------- UI -------------------- */
+
+//   return (
+//     <UserLayout>
+//       <div className="grid grid-cols-1 xl:grid-cols-4 gap-10 py-2">
+
+//         {/* ----------- SIDEBAR ----------- */}
+//         <div className="xl:col-span-1 space-y-6">
+
+//           <div className="bg-slate-800/60 rounded-3xl p-6">
+//             {profileLoading ? (
+//               <div className="animate-pulse space-y-4">
+//                 <div className="w-24 h-24 bg-slate-700 rounded-full mx-auto"></div>
+//                 <div className="h-4 bg-slate-700 rounded w-3/4 mx-auto"></div>
+//               </div>
+//             ) : (
+//               <>
+//                 <div className="w-24 h-24 mx-auto rounded-full overflow-hidden bg-slate-700 flex items-center justify-center">
+//                   {userInfo.profileImage ? (
+//                     <img
+//                       src={`http://localhost:8000${userInfo.profileImage}`}
+//                       alt="Profile"
+//                       className="w-full h-full object-cover"
+//                     />
+//                   ) : (
+//                     <span className="text-3xl text-white">
+//                       {userInfo.username?.charAt(0).toUpperCase()}
+//                     </span>
+//                   )}
+//                 </div>
+
+//                 <h2 className="text-2xl text-white font-bold text-center mt-4">
+//                   {userInfo.display_name?.trim() || userInfo.username}
+//                 </h2>
+
+//                 <div className="space-y-3 mt-6 text-gray-300 text-sm">
+//                   <p className="flex items-center gap-2">
+//                     <UserRound className="w-4 h-4 text-cyan-400" />
+//                     {userInfo.username}
+//                   </p>
+//                   <p className="flex items-center gap-2">
+//                     <Mail className="w-4 h-4 text-cyan-400" />
+//                     {userInfo.email}
+//                   </p>
+//                   <p className="flex items-center gap-2">
+//                     <Calendar className="w-4 h-4 text-cyan-400" />
+//                     Joined {new Date(userInfo.createdAt).toLocaleDateString()}
+//                   </p>
+//                   <p className="flex items-center gap-2">
+//                     <Award className="w-4 h-4 text-cyan-400" />
+//                     {userInfo.role}
+//                   </p>
+//                 </div>
+
+//                 <button
+//                   onClick={() => {
+//                     setProfileModalMode("complete");
+//                     setIsProfileModalOpen(true);
+//                   }}
+//                   className="w-full mt-6 bg-blue-500/20 border border-blue-500/40 text-blue-400 py-2 rounded-lg"
+//                 >
+//                   <Settings className="inline w-4 h-4 mr-2" /> Edit Profile
+//                 </button>
+//               </>
+//             )}
+//           </div>
+
+//           <button
+//             onClick={handleLogout}
+//             className="w-full bg-red-500/20 border border-red-500/30 text-red-400 py-3 rounded-xl"
+//           >
+//             Logout
+//           </button>
+//         </div>
+
+//         {/* ----------- MAIN CONTENT ----------- */}
+//         <div className="xl:col-span-3 space-y-8">
+
+//           {/* STATS SECTION */}
+//           <div className="bg-slate-800/60 rounded-3xl p-8">
+//             <h3 className="text-2xl font-semibold text-white mb-8 flex items-center gap-2">
+//               <BarChart3 className="w-6 h-6 text-cyan-400" />
+//               Statistics
+//             </h3>
+
+//             {statsLoading ? (
+//               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+//                 {[...Array(4)].map((_, i) => (
+//                   <div
+//                     key={i}
+//                     className="h-16 bg-slate-700 animate-pulse rounded-xl"
+//                   ></div>
+//                 ))}
+//               </div>
+//             ) : (
+//               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+//                 <StatBlock title="Solved" value={userStats?.solvedProblems || 0} />
+//                 <StatBlock title="Easy" value={userStats?.easyCount || 0} />
+//                 <StatBlock title="Medium" value={userStats?.mediumCount || 0} />
+//                 <StatBlock title="Hard" value={userStats?.hardCount || 0} />
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       {isProfileModalOpen && (
+//         <ProfileEditModal
+//           mode={profileModalMode}
+//           userInfo={userInfo}
+//           onClose={() => setIsProfileModalOpen(false)}
+//           onProfileUpdate={(updatedProfile) =>
+//             setUserInfo((prev) => ({ ...prev, ...updatedProfile }))
+//           }
+//         />
+//       )}
+//     </UserLayout>
+//   );
+// };
+
+// const StatBlock = ({ title, value }) => (
+//   <div className="bg-slate-700/30 rounded-2xl p-6 text-center border border-slate-600/20">
+//     <p className="text-4xl font-bold text-cyan-400 mb-2">{value}</p>
+//     <p className="text-gray-400 text-sm">{title}</p>
+//   </div>
+// );
+
+// export default UserProfilePage;
