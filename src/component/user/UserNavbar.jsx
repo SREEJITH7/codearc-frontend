@@ -1,6 +1,7 @@
 import React, { useState, lazy, Suspense } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { User, Layers, Menu, X, Crown, Lock } from "lucide-react";
+import NotificationDropdown from "../../features/notifications/NotificationDropdown";
 
 const SubscriptionModal = lazy(() => import("./SubscriptionModal"));
 
@@ -56,6 +57,9 @@ const UserNavbar = () => {
           </nav>
 
           <div className="flex items-center space-x-4">
+
+            <NotificationDropdown />
+
             {/* ✅ Fixed Profile Icon - Now clickable */}
             <button 
               onClick={() => navigate("/user/profile")}

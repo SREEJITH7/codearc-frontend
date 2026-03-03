@@ -10,6 +10,7 @@
 
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
+import notificationReducer from "../features/notifications/notificationSlice";
 
 import {
   persistStore,
@@ -27,6 +28,7 @@ import storage from "redux-persist/lib/storage"; // localStorage
 // reducers you want to persist
 const rootReducer = combineReducers({
   auth: authReducer,
+  notifications: notificationReducer,
 });
 
 // persist config

@@ -1,8 +1,12 @@
 import React from 'react';
 import UserNavbar from '../component/user/UserNavbar';
 import UserFooter from '../component/user/UserFooter';
+import useNotificationSocket from "../features/notifications/useNotificationSocket";
 
 const UserLayout = ({ children, fullScreen = false }) => {
+  
+  useNotificationSocket();
+  
   if (fullScreen) {
     return (
       <div className="h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white overflow-hidden">
