@@ -16,11 +16,11 @@
 
 // export default RecruiterLayout;
 
-import React from "react";
+import useNotificationSocket from "../features/notifications/useNotificationSocket";
 import RecruiterNavbar from "../component/recruiter/RecruiterNavbar";
 import RecruiterFooter from "../component/recruiter/RecruiterFooter";
-
 const RecruiterLayout = ({ children }) => {
+  useNotificationSocket();
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col">
       <RecruiterNavbar />

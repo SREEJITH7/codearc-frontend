@@ -324,12 +324,12 @@ export const userAuthService = {
     try{
       console.log("Making POST request to /api/auth/logout/")
 
-      const res = await axiosInstance.post("/api/auth/logout/");
+      const res = await axiosInstance.post("/api/auth/logout/", { role: "user" });
       console.log("Logout Success:", res.data);
       
       return{
         success: true,
-        message: res.data.messsage || "Logged out Successfull",
+        message: res.data.message || "Logged out Successfull",
       };
     } catch (err) {
       console.error("Loggout error:", err.response?.data || err);

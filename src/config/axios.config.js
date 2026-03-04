@@ -6,31 +6,42 @@ import { envConfig } from "./env.config";
 
 
 // AXIOS INSTANCE
-
 export const axiosInstance = axios.create({
   baseURL: envConfig.apiUrl,
-  withCredentials: true,  
+  withCredentials: true,
 });
 
- 
-// GET ROLE (FOR REDIRECT)
- 
-const getRoleFromUrl = (url = "") => {
-  const role = Cookies.get("user_role");
-  if (role) return role.toLowerCase();
+// Proactive Cleanup of legacy tokens (run once on load)
+const clearLegacyTokens = () => {
+  if (Cookies.get("access_token") || Cookies.get("refresh_token")) {
+    console.log("🧹 Cleaning up old/legacy tokens...");
+    Cookies.remove("access_token");
+    Cookies.remove("refresh_token");
+  }
+};
+clearLegacyTokens();
 
-  if (url.includes("/api/user/")) return "user";
+
+// GET ROLE (FOR REDIRECT)
+
+const getRoleFromUrl = (url = "") => {
+  // Check common prefixes first
+  if (url.includes("/api/admin/") || url.includes("/admin/")) return "admin";
   if (url.includes("/api/recruiter/")) return "recruiter";
-  return "user";
+  if (url.includes("/api/user/")) return "user";
+
+  // Fallback to cookie or default
+  const role = Cookies.get("user_role");
+  return role ? role.toLowerCase() : "user";
 };
 
- 
+
 // REQUEST INTERCEPTOR (NO TOKEN READ)
- 
+
 axiosInstance.interceptors.request.use(
   (config) => {
     console.log("📤 API Request:", config.method?.toUpperCase(), config.url);
-     
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -47,7 +58,7 @@ const onRefreshed = () => {
   subscribers = [];
 };
 
-const refreshAccessToken = async () => {
+const refreshAccessToken = async (role = "user") => {
   try {
     if (isRefreshing) {
       return new Promise((resolve) => subscribeTokenRefresh(resolve));
@@ -55,8 +66,8 @@ const refreshAccessToken = async () => {
 
     isRefreshing = true;
 
-    console.log("🔁 Refreshing access token...");
-    await axiosInstance.post("/api/auth/refresh-token/");
+    console.log(`🔁 Refreshing access token for ${role}...`);
+    await axiosInstance.post("/api/auth/refresh-token/", { role });
 
     isRefreshing = false;
     onRefreshed();
@@ -78,19 +89,20 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const role = getRoleFromUrl(originalRequest?.url);
+    const accessCookie = role === "admin" ? "admin_access_token" : role === "recruiter" ? "recruiter_access_token" : "user_access_token";
+    const refreshCookie = role === "admin" ? "admin_refresh_token" : role === "recruiter" ? "recruiter_refresh_token" : "user_refresh_token";
 
-    
     // 403 → BLOCKED USER
     if (error.response?.status === 403) {
-      Cookies.remove("access_token");
-      Cookies.remove("refresh_token");
+      Cookies.remove(accessCookie);
+      Cookies.remove(refreshCookie);
       window.location.href = `/${role}/login`;
       return Promise.reject(error);
     }
 
-     
+
     // 401 → TRY REFRESH (ONCE)
- 
+
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
@@ -98,7 +110,7 @@ axiosInstance.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
-      const refreshed = await refreshAccessToken();
+      const refreshed = await refreshAccessToken(role);
 
       if (refreshed) {
         //Cookie already updated by backend
@@ -106,8 +118,8 @@ axiosInstance.interceptors.response.use(
       }
 
       // Refresh failed → logout
-      Cookies.remove("access_token");
-      Cookies.remove("refresh_token");
+      Cookies.remove(accessCookie);
+      Cookies.remove(refreshCookie);
       window.location.href = `/${role}/login`;
       return Promise.reject(error);
     }

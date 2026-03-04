@@ -407,12 +407,12 @@ updateProfile: async (formData) => {
     try{
       console.log("Making POST request to /api/auth/logout/")
 
-      const res = await axiosInstance.post("/api/auth/logout/");
+      const res = await axiosInstance.post("/api/auth/logout/", { role: "recruiter" });
       console.log("Logout Success:", res.data);
       
       return{
         success: true,
-        message: res.data.messsage || "Logout Successfully",
+        message: res.data.message || "Logout Successfully",
       };
     } catch (err) {
       console.error("Loggout error:", err.response?.data || err);
