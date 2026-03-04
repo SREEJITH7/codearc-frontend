@@ -7,19 +7,28 @@ const useNotificationSocket = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
+  console.log("🛠️ Hook initialized. User state:", user);
   useEffect(() => {
-    if (!user) return;
-
-    const token = Cookies.get("access_token");
-
-    if (!token) {
-      console.log("No access token found. Notification socket not started.");
+    console.log("🛠️ useEffect triggered. User:", user ? "FOUND" : "NULL");
+    if (!user) {
+      console.log("🛑 Hook early exit: No user in Redux");
       return;
     }
 
-    const socket = new WebSocket(
-      `ws://127.0.0.1:8000/ws/notifications/?token=${token}`
-    );
+    const role = user?.role || "user";
+    console.log("🔍 Notification hook: User role is", role);
+    const accessCookie = role === "admin" ? "admin_access_token" : role === "recruiter" ? "recruiter_access_token" : "user_access_token";
+    const token = Cookies.get(accessCookie);
+    console.log(`🔍 Notification hook: Looking for cookie ${accessCookie}, found token:`, token ? "EXISTS" : "MISSING");
+
+    if (!token) {
+      console.log(`🔍 Note: No access token found in JS cookies for ${role}. This is expected if HttpOnly is enabled. Proceeding to connect...`);
+    }
+
+    const wsUrl = `ws://localhost:8000/ws/notifications/` + (token ? `?token=${token}` : "");
+    console.log(`📡 Attempting WebSocket connection to: ${wsUrl}`);
+
+    const socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {
       console.log("🔔 Notification socket connected");

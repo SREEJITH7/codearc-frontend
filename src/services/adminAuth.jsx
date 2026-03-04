@@ -192,7 +192,7 @@ login: async (formData) => {
 logout : async () => {
   console.log("called for the logout from admin from admin auth service")
   try{
-    const res = await axiosInstance.post("/api/auth/logout/");
+    const res = await axiosInstance.post("/api/auth/logout/", { role: "admin" });
     console.log("Making POST request to /api/auth/logout")
     
     return{

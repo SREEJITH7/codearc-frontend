@@ -2,6 +2,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { markAllReadOnServer, fetchNotifications } from "./notificationSlice";
 import { useState, useEffect } from "react";
 
+
+
 const NotificationDropdown = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -23,7 +25,7 @@ const NotificationDropdown = () => {
 
   return (
     <div className="relative">
-      {/* Bell Button */}
+      
       <button
         onClick={handleToggle}
         className="relative p-2 rounded-full hover:bg-slate-800 transition-colors"
@@ -36,7 +38,7 @@ const NotificationDropdown = () => {
         )}
       </button>
 
-      {/* Dropdown Panel */}
+      
       {open && (
         <div className="absolute right-0 mt-3 w-80 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 max-h-[32rem] overflow-hidden flex flex-col">
           <div className="p-4 border-b border-slate-700 bg-slate-800/50 flex justify-between items-center">

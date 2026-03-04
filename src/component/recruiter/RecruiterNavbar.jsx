@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Layers, User, Menu, X, Crown } from "lucide-react";
+import { Layers, User, Menu, X, Crown, Bell } from "lucide-react";
+import NotificationDropdown from "../../features/notifications/NotificationDropdown";
 
 const RecruiterNavbar = () => {
   const location = useLocation();
@@ -59,6 +60,7 @@ const RecruiterNavbar = () => {
 
         {/* RIGHT ACTIONS */}
         <div className="flex items-center space-x-4">
+          <NotificationDropdown />
           <Link to="/recruiter/profile">
             <User className="w-5 h-5 text-gray-300 hover:text-white cursor-pointer transition-colors" />
           </Link>
