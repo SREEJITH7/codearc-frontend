@@ -381,7 +381,7 @@ import {
   Mail, Phone, Briefcase, ChevronLeft, CheckCircle,
   XCircle, Clock, Star, Trophy, BookOpen, Percent, Send,
   MapPin, GraduationCap, Lightbulb, FileText, Award,
-  Building2, Info, AlertCircle, Github, Linkedin, Globe
+  Building2, Info, AlertCircle, Github, Linkedin, Globe, MessageSquare
 } from "lucide-react";
 import { toast } from "react-toastify";
 import RecruiterLayout from "../../../layouts/RecruiterLayout";
@@ -706,14 +706,22 @@ const ApplicantProfilePage = () => {
                       <ActionButton
                         onClick={() => navigate(`/recruiter/applicants-details/${applicationId}/send-offer`)}
                         disabled={updating} color="emerald" icon={<Send size={16}/>} label="Send Offer"/>
+                      <ActionButton
+                        onClick={() => navigate(`/recruiter/chat?applicationId=${applicationId}`)}
+                        disabled={updating} color="blue" icon={<MessageSquare size={16}/>} label="Message Candidate"/>
                       <ActionButton onClick={() => handleStatusUpdate("rejected")} disabled={updating}
                         color="red" icon={<XCircle size={16}/>} label="Decline Application"/>
                     </>
                   )}
                   {applicant.status === "ACCEPTED" && (
-                    <div className="flex items-center justify-center gap-2 py-4 rounded-xl
-                      bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-base font-bold">
-                      <CheckCircle size={18}/>Offer Accepted
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-center gap-2 py-4 rounded-xl
+                        bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-base font-bold">
+                        <CheckCircle size={18}/>Offer Accepted
+                      </div>
+                      <ActionButton
+                        onClick={() => navigate(`/recruiter/chat?applicationId=${applicationId}`)}
+                        disabled={updating} color="blue" icon={<MessageSquare size={16}/>} label="Message Candidate"/>
                     </div>
                   )}
                   {applicant.status === "REJECTED" && (
@@ -727,6 +735,27 @@ const ApplicantProfilePage = () => {
                       <div className="w-5 h-5 border-2 border-indigo-400/30 border-t-indigo-400 rounded-full animate-spin"/>
                     </div>
                   )}
+
+                  {/* Diagnostic Test Button */}
+                  {/* <div className="pt-4 mt-4 border-t border-slate-700/50">
+                    <button
+                      onClick={async () => {
+                        try {
+                          await applicationService.sendTestNotification();
+                          toast.info("Test trigger sent to backend");
+                        } catch (err) {
+                          toast.error("Failed to trigger test notification");
+                        }
+                      }}
+                      className="w-full py-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-all border border-slate-600/30"
+                    >
+                      🚀 Test Real-time (Self)
+                    </button>
+                    <p className="text-[9px] text-slate-500 mt-2 text-center italic">
+                      Sends a real-time alert to YOUR bell icon to verify WebSocket
+                    </p>
+                  </div> */}
+
                 </div>
               </div>
 

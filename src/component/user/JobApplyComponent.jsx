@@ -52,6 +52,55 @@ const JobApplyComponent = ({ onSubmitApplication }) => {
     pgCertificate: null,
   });
 
+  const [isLoadingProfile, setIsLoadingProfile] = React.useState(false);
+
+  React.useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setIsLoadingProfile(true);
+        // Assuming userAuthService is available or needs to be imported
+        const { userAuthService } = await import("../../services/userAuth");
+        const response = await userAuthService.getUserProfile();
+        
+        if (response.success && response.data) {
+          const profile = response.data;
+          
+          setFormData(prev => ({
+            ...prev,
+            // Step 1: Personal Info
+            name: prev.name || profile.display_name || profile.username || "",
+            email: prev.email || profile.email || "",
+            contactNo: prev.contactNo || profile.phone || "",
+            location: prev.location || profile.location || "",
+            
+            // Step 2: Education
+            highestQualification: prev.highestQualification || profile.highest_qualification || "",
+            qualificationName: prev.qualificationName || profile.specialization || "",
+            institutionName: prev.institutionName || profile.institution || "",
+            yearOfGraduation: prev.yearOfGraduation || profile.graduation_year || "",
+            cgpa: prev.cgpa || profile.cgpa || "",
+            
+            // Step 3: Experience & Skills
+            totalExperience: prev.totalExperience || profile.total_experience || "",
+            companyNames: prev.companyNames || profile.current_company || "",
+            skills: prev.skills.length > 0 ? prev.skills : (profile.skills || []),
+            aboutYourself: prev.aboutYourself || profile.bio || "",
+            
+            // Step 4: Documents & Portfolio (Portfolio links)
+            githubProfile: prev.githubProfile || profile.github || "",
+            linkedinProfile: prev.linkedinProfile || profile.linkedin || "",
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching profile for prefill:", error);
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const [currentSkill, setCurrentSkill] = useState("");
 
   const handleInputChange = (e) => {
