@@ -36,7 +36,7 @@ import LoadingFallback from "../component/common/LoadingFallback";
 const AdminLogin = lazy(() => import("../pages/admin/auth/AdminLogin"));
 
 // DASHBOARD
-const AdminDashboardPage = lazy(() => import("../pages/admin/adminPages/DashBoardPage").then(m => ({ default: m.AdminDashboardPage })));
+const AdminDashboardPage = lazy(() => import("../pages/admin/adminpages/AdminDashboardPage"));
 const UsersListPage = lazy(() => import("../pages/admin/adminpages/UsersListPage"));
 const RecruiterListPage = lazy(() => import("../pages/admin/adminpages/RecruiterListPage").then(m => ({ default: m.RecruiterListPage })));
 const ApplicantsListPage = lazy(() => import("../pages/admin/adminpages/ApplicantsListPage"));

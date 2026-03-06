@@ -16,4 +16,14 @@ export const adminService = {
             throw error;
         }
     },
+
+    getDashboardMetrics: async () => {
+        try {
+            const response = await axiosInstance.get("/api/admin/dashboard/metrics/");
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching dashboard metrics:", error);
+            throw error;
+        }
+    },
 };
