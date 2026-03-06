@@ -11,6 +11,8 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import notificationReducer from "../features/notifications/notificationSlice";
+import chatReducer from "./chatSlice";
+import messageReducer from "./messageSlice";
 
 import {
   persistStore,
@@ -29,6 +31,8 @@ import storage from "redux-persist/lib/storage"; // localStorage
 const rootReducer = combineReducers({
   auth: authReducer,
   notifications: notificationReducer,
+  chat: chatReducer,
+  messages: messageReducer,
 });
 
 // persist config

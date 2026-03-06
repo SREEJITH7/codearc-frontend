@@ -16,9 +16,10 @@ const JobPostPage = lazy(() => import("../pages/recruiter/recruiterPages/JobPost
 const ViewAllJobs = lazy(() => import("../pages/recruiter/recruiterPages/ViewAllJobs"));
 const ApplicantsPage = lazy(() => import("../pages/recruiter/recruiterPages/ApplicantsPage"));
 const ApplicantProfilePage = lazy(() => import("../pages/recruiter/recruiterPages/ApplicantProfilePage"));
+const RecruiterSubscriptionPage = lazy(() => import("../component/recruiter/RecruiterSubscriptionPage"));
 const SendOfferPage = lazy(() => import("../pages/recruiter/recruiterPages/SendOfferPage"));
 const ShortlistedApplicantsPage = lazy(() => import("../pages/recruiter/recruiterPages/ShortlistedApplicantsPage"));
-const RecruiterSubscriptionPage = lazy(() => import("../component/recruiter/RecruiterSubscriptionPage"));
+const RecruiterChatPage = lazy(() => import("../pages/recruiter/recruiterPages/RecruiterChatPage"));
 
 const RecruiterRoutes = () => {
   return (
@@ -44,6 +45,7 @@ const RecruiterRoutes = () => {
           <Route path="applicants-details/:applicationId" element={<ApplicantProfilePage/>} />
           <Route path="applicants-details/:applicationId/send-offer" element={<SendOfferPage />} />
           <Route path="subscription" element={<RecruiterSubscriptionPage />} />
+          <Route path="chat" element={<RecruiterChatPage />} />
         </Route>
       </Routes>
     </Suspense>

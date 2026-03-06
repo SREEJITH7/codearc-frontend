@@ -1,6 +1,7 @@
 import React, { useState, lazy, Suspense } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { User, Layers, Menu, X, Crown, Lock } from "lucide-react";
+import { User, Layers, Menu, X, Crown, Lock, MessageSquare } from "lucide-react";
+import { useSelector } from "react-redux";
 import NotificationDropdown from "../../features/notifications/NotificationDropdown";
 
 const SubscriptionModal = lazy(() => import("./SubscriptionModal"));
@@ -19,6 +20,9 @@ const UserNavbar = () => {
     { path: "/user/jobdetails", label: "Jobs", active: true },
     // { path: "/user/interview", label: "Interview", active: false },
   ];
+
+  const { conversations } = useSelector((state) => state.chat);
+  const totalUnread = conversations.reduce((acc, conv) => acc + (conv.unread_count || 0), 0);
 
   return (
     <>
@@ -57,6 +61,15 @@ const UserNavbar = () => {
           </nav>
 
           <div className="flex items-center space-x-4">
+
+            <Link to="/user/chat" className="relative group p-2 rounded-lg hover:bg-slate-700/50 transition-colors" title="Messages">
+              <MessageSquare className="w-5 h-5 text-gray-300 group-hover:text-white cursor-pointer transition-colors" />
+              {totalUnread > 0 && (
+                <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold px-1 rounded-full min-w-[16px] h-4 flex items-center justify-center border-2 border-slate-800">
+                  {totalUnread}
+                </span>
+              )}
+            </Link>
 
             <NotificationDropdown />
 

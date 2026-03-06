@@ -1,12 +1,14 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { markAllReadOnServer, fetchNotifications } from "./notificationSlice";
-import { useState, useEffect } from "react";
 
 
 
 const NotificationDropdown = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { notifications, unreadCount } = useSelector(
     (state) => state.notifications
@@ -73,6 +75,19 @@ const NotificationDropdown = () => {
                   <p className="text-[10px] text-gray-500 mt-2">
                     {notif.created_at ? new Date(notif.created_at).toLocaleString() : ''}
                   </p>
+
+                  {notif.type === "SHORTLIST" && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpen(false);
+                        navigate("/user/chat");
+                      }}
+                      className="mt-3 w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors"
+                    >
+                      Message Recruiter
+                    </button>
+                  )}
                 </div>
               ))
             )}

@@ -1,11 +1,15 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Layers, User, Menu, X, Crown, Bell } from "lucide-react";
+import { Layers, User, Menu, X, Crown, Bell, MessageSquare } from "lucide-react";
+import { useSelector } from "react-redux";
 import NotificationDropdown from "../../features/notifications/NotificationDropdown";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const RecruiterNavbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const { conversations } = useSelector((state) => state.chat);
+  const totalUnread = conversations.reduce((acc, conv) => acc + (conv.unread_count || 0), 0);
 
   const navItems = [
     { path: "/recruiter/portal", label: "Home" },
@@ -60,6 +64,14 @@ const RecruiterNavbar = () => {
 
         {/* RIGHT ACTIONS */}
         <div className="flex items-center space-x-4">
+          <Link to="/recruiter/chat" className="relative group">
+            <MessageSquare className="w-5 h-5 text-gray-300 group-hover:text-white cursor-pointer transition-colors" />
+            {totalUnread > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold px-1 rounded-full min-w-[16px] h-4 flex items-center justify-center border-2 border-slate-800">
+                {totalUnread}
+              </span>
+            )}
+          </Link>
           <NotificationDropdown />
           <Link to="/recruiter/profile">
             <User className="w-5 h-5 text-gray-300 hover:text-white cursor-pointer transition-colors" />

@@ -137,13 +137,22 @@ const UserApplicationPage = () => {
 
           <SingleJobDetailsComponent job={job} />
 
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex justify-center gap-4">
             <button
               onClick={() => navigate("/user/jobdetails")}
               className="px-8 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl font-semibold transition-all border border-slate-700"
             >
               Back to All Jobs
             </button>
+            {job.status === "SHORTLISTED" && (
+                <button
+                    onClick={() => navigate("/user/chat")}
+                    className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl font-semibold transition-all flex items-center gap-2"
+                >
+                    <MessageSquare size={18} />
+                    Message Recruiter
+                </button>
+            )}
           </div>
         </div>
       </div>

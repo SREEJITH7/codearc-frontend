@@ -17,9 +17,10 @@ const SingleProblemPage = lazy(() => import("../pages/user/userpages/SingleProbl
 const JobDetailsPage = lazy(() => import("../pages/user/userpages/JobDetailsPage"));
 const JobApplyPage = lazy(() => import("../pages/user/userpages/JobApplyPage"));
 const UserApplicationPage = lazy(() => import("../pages/user/userpages/UserApplicationPage"));
-const ApplicationTrackingPage = lazy(() => import("../pages/user/userpages/ApplicationTrackingPage"));
 const AiChatPage = lazy(() => import("../component/ai/AiChatPage"));
 const SubscriptionPage = lazy(() => import("../pages/SubscriptionPage"));
+const ApplicationTrackingPage = lazy(() => import("../pages/user/userpages/ApplicationTrackingPage"));
+const UserChatPage = lazy(() => import("../pages/user/userpages/UserChatPage"));
 
  
 export default function UserRoutes() {
@@ -50,6 +51,7 @@ export default function UserRoutes() {
           <Route path="user/application-tracking/:jobId" element={<ApplicationTrackingPage />} />
           <Route path="user/ai-tutor" element={<AiChatPage />} />
           <Route path="user/subscription" element={<SubscriptionPage />} />
+          <Route path="user/chat" element={<UserChatPage />} />
         </Route>
       </Routes>
     </Suspense>

@@ -71,6 +71,12 @@ const UserProfilePage = () => {
   // Profile image uploaded
   const hasProfileImage = Boolean(userInfo.profileImage);
 
+  // New fields
+  const hasPhone = Boolean(userInfo.phone?.trim());
+  const hasLocation = Boolean(userInfo.location?.trim());
+  const hasEducation = Boolean(userInfo.highest_qualification?.trim());
+  const hasExperience = Boolean(userInfo.total_experience?.trim());
+
   // All checks (easy to extend later)
   const profileChecks = [
     hasBasicInfo,
@@ -78,6 +84,10 @@ const UserProfilePage = () => {
     hasResume,
     hasSkills,
     hasBio,
+    hasPhone,
+    hasLocation,
+    hasEducation,
+    hasExperience,
   ];
 
   // Completion %
@@ -337,8 +347,11 @@ const UserProfilePage = () => {
             <div className="space-y-3 mt-4">
               <StatusRow label="Basic Info" done={hasBasicInfo} />
               <StatusRow label="Profile Image" done={hasProfileImage} />
+              <StatusRow label="Contact & Location" done={hasPhone && hasLocation} />
               <StatusRow label="Resume" done={hasResume} />
               <StatusRow label="Skills" done={hasSkills} />
+              <StatusRow label="Education" done={hasEducation} />
+              <StatusRow label="Work Experience" done={hasExperience} />
               <StatusRow label="Bio" done={hasBio} />
             </div>
 
